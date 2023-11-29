@@ -5,6 +5,8 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import Button from "../Button";
 import Loader from "../Icons/Loader";
 import Input from "../Input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchemaObject } from "@/app/utils/resolver";
 
 type RegisterFormInputs = {
   email: string;
@@ -18,7 +20,9 @@ export default function RegisterForm(): JSX.Element {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<RegisterFormInputs>();
+  } = useForm<RegisterFormInputs>({
+    resolver: zodResolver(loginSchemaObject),
+  });
 
   const onSubmit: SubmitHandler<RegisterFormInputs> = (
     data: RegisterFormInputs
