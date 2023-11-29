@@ -78,7 +78,7 @@ const Input: FC<InputProps> = ({
         </label>
       )}
       <div
-        className="border border-whitish_border h-[40px] flex items-center px-2 text-sm rounded-[9px] relative"
+        className="outline outline-1 outline-whitish_border h-[40px] flex items-center px-2 text-sm rounded-[9px] relative transition-all duration-300 focus-within:outline-black"
         style={{
           width: width ?? "100%",
           marginTop: label && "2px",

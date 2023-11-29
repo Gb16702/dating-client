@@ -18,10 +18,12 @@ export default function Page() {
       <SocialAuth />
       <Link
         href="/authentification/inscription"
-        className="block font-medium text-xs mt-5 text-subtitle_foreground"
+        className="block text-xs mt-5 text-subtitle_foreground"
       >
         Pas encore membre ?{" "}
-        <span className="underline text-black">S'inscrire</span>
+        <span className="underline text-black">
+          S'inscrire
+        </span>
       </Link>
     </div>
   );

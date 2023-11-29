@@ -1,15 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import Loader from "./Icons/Loader";
+import type { ReactNode } from "react";
+
 
 export default function Button({
-  children,
   variant,
   width,
-  loadable,
-}: ButtonInterface): JSX.Element {
-  const [loading, setLoading] = useState(false);
+  children,
+  disabled
+}: ButtonInterface & { children: ReactNode }): JSX.Element {
 
   let buttonBackground: Record<
     ButtonInterface["variant"],
@@ -44,12 +43,11 @@ export default function Button({
     <>
       <button
         style={dynamicButtonStyles}
+        disabled={disabled}
         className={`font-medium text-[12px] px-2 h-[40px] rounded-[9px] flex justify-center items-center relative transition-colors duration-300 ${variant}
         `}
-        onClick={loadable ? () => setLoading(true) : undefined}
-        disabled={loading}
       >
-        {loadable && loading ? <Loader /> : children}
+        {children}
       </button>
     </>
   );

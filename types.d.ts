@@ -1,8 +1,7 @@
 interface ButtonInterface {
-  children: string | React.ReactNode;
   variant: "default" | "error" | "social";
   width?: string;
-  loadable?: boolean;
+  disabled?: boolean;
   onClick?: () => void;
 }
 

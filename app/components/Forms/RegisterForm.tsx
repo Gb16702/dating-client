@@ -1,15 +1,35 @@
 "use client";
 
+import { useState } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import Button from "../Button";
+import Loader from "../Icons/Loader";
 import Input from "../Input";
 
+type RegisterFormInputs = {
+  email: string;
+  password: string;
+};
+
 export default function RegisterForm(): JSX.Element {
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-  }
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormInputs>();
+
+  const onSubmit: SubmitHandler<RegisterFormInputs> = (
+    data: RegisterFormInputs
+  ) => {
+    console.log(data);
+    setLoading(true);
+    //ici je mets le bouton à charger
+  };
 
   return (
-    <form onSubmit={onSubmit} className="mt-[35px]">
+    <form onSubmit={handleSubmit(onSubmit)} className="mt-[35px]">
       <div className="flex flex-col gap-y-4">
         <div>
           <Input
@@ -33,8 +53,8 @@ export default function RegisterForm(): JSX.Element {
         </div>
       </div>
       <div className="mt-[20px]">
-        <Button variant="default" width="340px" loadable>
-          Inscription
+        <Button variant="default" width="340px" disabled={loading}>
+          {loading ? <Loader /> : "Inscription"}
         </Button>
       </div>
     </form>

@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-button.default:hover {
+button.default:hover, button.default:disabled {
   @apply bg-zinc-700 !important;
 }
 
