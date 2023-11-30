@@ -51,6 +51,6 @@ button.default:hover, button.default:disabled {
   }
 }
 
-svg:nth-child(1) {
+.spinner:nth-child(1) {
   stroke: #fff;
 }

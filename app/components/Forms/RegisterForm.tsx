@@ -1,12 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import GeneratePassword from "@/app/utils/generatePassword";
+import { useCallback, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import Button from "../Button";
+import { Eye, EyeOff } from "../Icons/EyeIcons";
 import Loader from "../Icons/Loader";
-import Input from "../Input";
+import Sparkles from "../Icons/Sparkles";
+import Button from "../UI/Button";
+import Input from "../UI/Input";
+import InputGroup from "../UI/InputGroup";
+import Label from "../UI/Label";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchemaObject } from "@/app/utils/resolver";
+import { loginSchemaObject } from "@/app/utils/validation/AuthResolver";
 
 type RegisterFormInputs = {
   email: string;
@@ -15,45 +20,81 @@ type RegisterFormInputs = {
 
 export default function RegisterForm(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
+  const [visible, setVisible] = useState<boolean>(false);
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<RegisterFormInputs>({
-    resolver: zodResolver(loginSchemaObject),
+    resolver: zodResolver(loginSchemaObject)
   });
 
-  const onSubmit: SubmitHandler<RegisterFormInputs> = (
+  const handleClick: () => void = useCallback(
+    () => setVisible((v: boolean) => !v),
+    []
+  );
+  const generatePassword: () => void = useCallback(
+    () => setValue("password", GeneratePassword(12)),
+    []
+  );
+
+  const onSubmit: SubmitHandler<RegisterFormInputs> = async (
     data: RegisterFormInputs
   ) => {
     console.log(data);
-    setLoading(true);
-    //ici je mets le bouton à charger
+
+    try {
+      
+    }
+    catch(err) {
+      console.log(err);
+    }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mt-[35px]">
       <div className="flex flex-col gap-y-4">
         <div>
-          <Input
-            label="Adresse mail"
-            type="email"
-            placeholder="toi@exemple.com"
-            name="email"
-            ariaLabel="Adresse email"
-            width="340px"
-          />
+          <Label name="Adresse mail" id="email" />
+          <InputGroup name="Adresse mail">
+            <Input
+              type="email"
+              ariaLabel="Adresse mail"
+              placeholder="toi@exemple.com"
+              id="email"
+              {...register("email")}
+            />
+          </InputGroup>
         </div>
         <div>
-          <Input
-            label="Mot de passe"
-            type="password"
-            placeholder="•••••••"
-            name="password"
-            ariaLabel="Mot de passe"
-            width="340px"
-          />
+          <Label name="Mot de passe" id="password" />
+          <InputGroup name="Mot de passe">
+            <Input
+              type={visible ? "text" : "password"}
+              ariaLabel="Mot de passe"
+              placeholder="•••••••"
+              id="password"
+              {...register("password")}
+            />
+            <div className="absolute top-1/2 -translate-y-1/2 right-3 flex items-center justify-center gap-x-2">
+              <button
+                aria-label="Générer un mot de passe"
+                type="button"
+                onClick={generatePassword}
+              >
+                <Sparkles />
+              </button>
+              <button
+                aria-label="Afficher / Masquer le mot de passe"
+                type="button"
+                onClick={handleClick}
+              >
+                {visible ? <EyeOff /> : <Eye />}
+              </button>
+            </div>
+          </InputGroup>
         </div>
       </div>
       <div className="mt-[20px]">

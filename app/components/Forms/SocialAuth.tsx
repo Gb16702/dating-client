@@ -1,10 +1,10 @@
-import Button from "../Button";
 import { Google, Spotify } from "../Icons/SocialIcons";
+import Button from "../UI/Button";
 
 export default function SocialAuth(): JSX.Element {
-  function handleGoogleAuth() {}
+  function _handleGoogleAuth() {}
 
-  function handleSpotifyAuth() {}
+  function _handleSpotifyAuth() {}
 
   return (
     <div className="flex items-center flex-row justify-between gap-x-4 mt-[20px]">

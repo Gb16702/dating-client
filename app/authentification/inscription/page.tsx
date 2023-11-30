@@ -2,7 +2,7 @@ import RegisterForm from "@/app/components/Forms/RegisterForm";
 import SocialAuth from "@/app/components/Forms/SocialAuth";
 import Link from "next/link";
 
-export default function Page() {
+export default function Inscription(): JSX.Element {
   return (
     <div className="w-full h-full">
       <h1 className="text-[21px] font-semibold">Commencer</h1>
