@@ -1,6 +1,8 @@
 "use client";
 
 import GeneratePassword from "@/app/utils/generatePassword";
+import { loginSchemaObject } from "@/app/utils/validation/AuthResolver";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Eye, EyeOff } from "../Icons/EyeIcons";
@@ -10,8 +12,6 @@ import Button from "../UI/Button";
 import Input from "../UI/Input";
 import InputGroup from "../UI/InputGroup";
 import Label from "../UI/Label";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchemaObject } from "@/app/utils/validation/AuthResolver";
 
 type RegisterFormInputs = {
   email: string;
@@ -28,7 +28,7 @@ export default function RegisterForm(): JSX.Element {
     setValue,
     formState: { errors },
   } = useForm<RegisterFormInputs>({
-    resolver: zodResolver(loginSchemaObject)
+    resolver: zodResolver(loginSchemaObject),
   });
 
   const handleClick: () => void = useCallback(
@@ -46,21 +46,23 @@ export default function RegisterForm(): JSX.Element {
     console.log(data);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER}/api/authentication/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password
-        })
-      })
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER}/api/authentication/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: data.email,
+            password: data.password,
+          }),
+        }
+      );
 
       const result = await response.json();
       console.log(result);
-    }
-    catch(err) {
+    } catch (err) {
       console.log(err);
     }
   };
