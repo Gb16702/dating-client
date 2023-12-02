@@ -46,7 +46,19 @@ export default function RegisterForm(): JSX.Element {
     console.log(data);
 
     try {
-      
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER}/api/authentication/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password
+        })
+      })
+
+      const result = await response.json();
+      console.log(result);
     }
     catch(err) {
       console.log(err);
