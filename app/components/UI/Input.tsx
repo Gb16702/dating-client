@@ -5,25 +5,38 @@ type InputPropsType = {
   name?: string;
   placeholder?: string;
   type: string;
+  width?: string;
+  additionalClasses?: string;
   id?: string;
 };
 
 const Input: FC<InputPropsType> = forwardRef<HTMLInputElement, InputPropsType>(
   (
-    { ariaLabel, type, name, placeholder, id, ...props }: InputPropsType,
+    {
+      ariaLabel,
+      type,
+      name,
+      placeholder,
+      width,
+      additionalClasses,
+      id,
+      ...props
+    }: InputPropsType,
     ref: ForwardedRef<HTMLInputElement>
   ) => {
-    const DEFAULT_CLASSES: string =
-      "placeholder-subtitle_foreground font-medium text-[12px] text-black outline-none w-full h-full";
+    const DEFAULT_CLASSES: string = `placeholder-subtitle_foreground font-medium text-[12px] text-black outline-none h-full ${
+      width ?? "w-auto"
+    }`;
 
     return (
       <input
         type={type}
         ref={ref}
-        className={DEFAULT_CLASSES}
+        className={`${DEFAULT_CLASSES} ${additionalClasses}`}
         name={name}
         placeholder={placeholder}
         id={id}
+        width={width}
         autoComplete="off"
         {...props}
       />

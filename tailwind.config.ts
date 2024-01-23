@@ -13,6 +13,7 @@ const config: Config = {
         accent_transparent: "rgba(62, 33, 244, 0.15)",
         long_foreground: "#828282",
         subtitle_foreground: "#ABA9A9",
+        gray_border: "#C9C9C9",
         whitish_border: "#F0F0F0",
         whitish_background: "#F7F7F7",
         transparent_black: "rgba(0, 0, 0, 0.3)",

@@ -54,3 +54,15 @@ button.default:hover, button.default:disabled {
 .spinner:nth-child(1) {
   stroke: #fff;
 }
+
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Pour Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

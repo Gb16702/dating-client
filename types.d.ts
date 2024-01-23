@@ -1,6 +1,7 @@
-interface ButtonInterface {
+type ButtonType = {
   variant: "default" | "error" | "social";
   width?: string;
   disabled?: boolean;
-  onClick?: () => void;
+  customClasses?: string;
+  onClick?: any ;
 }
