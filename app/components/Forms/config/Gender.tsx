@@ -12,12 +12,12 @@ type GenderProps = {
 };
 
 export type GenderFormInputs = {
-  gender: string;
+  gender: number;
 };
 
 export default function Gender({ onNextStep, initialGender, onGenderChange }: GenderProps): JSX.Element {
   const [loading, setLoading] = useState(false);
-  const [genderChecked, setGenderChecked] = useState("");
+  const [genderChecked, setGenderChecked] = useState<number | null>(null);
 
   const menRef: RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
   const womenRef: RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
@@ -34,7 +34,7 @@ export default function Gender({ onNextStep, initialGender, onGenderChange }: Ge
     return null;
   }
 
-  function handleGenderChecked(gender: "homme" | "femme") {
+  function handleGenderChecked(gender: number) {
     setGenderChecked(gender);
     setValue("gender", gender)
   }
@@ -53,39 +53,39 @@ export default function Gender({ onNextStep, initialGender, onGenderChange }: Ge
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-col w-[400px] flex-1 pt-[20px] gap-y-3">
-          <InputGroup width="75%" outlineColor={ genderChecked === "homme" ? "outline-black" : "outline-gray_border" } onClick={() => menRef?.current?.click()}>
+        <div className="flex flex-col w-[400px] max-sm:w-full flex-1 pt-[20px] gap-y-3">
+          <InputGroup outlineColor={ genderChecked === 1 ? "outline-black" : "outline-gray_border" } additionalClasses="w-[75%] max-sm:w-full" onClick={() => menRef?.current?.click()}>
             <div className="flex justify-between w-full">
               <span className="ml-2 font-semibold">Homme</span>
               <div className="flex items-center">
                 <input
                   type="radio"
                   className="invisible"
-                  value="homme"
-                  onClick={() => handleGenderChecked("homme")}
+                  value="1"
+                  onClick={() => handleGenderChecked(1)}
                   {...register("gender", { required: { value: true, message: "Veuillez choisir un genre" }})}
                   ref={menRef}
                 />
                 <div className="rounded-full w-[14px] h-[14px] outline outline-1 outline-black flex items-center justify-center relative">
-                  {genderChecked === "homme" && <div className="rounded-full w-[10px] h-[10px] bg-black"></div>}
+                  {genderChecked === 1 && <div className="rounded-full w-[10px] h-[10px] bg-black"></div>}
                 </div>
               </div>
             </div>
           </InputGroup>
-          <InputGroup width="75%" outlineColor={ genderChecked === "femme" ? "outline-black" : "outline-gray_border" } onClick={() => womenRef?.current?.click()}>
+          <InputGroup outlineColor={ genderChecked === 2 ? "outline-black" : "outline-gray_border" } additionalClasses="w-[75%] max-sm:w-full" onClick={() => womenRef?.current?.click()}>
             <div className="flex justify-between w-full">
               <span className="ml-2 font-semibold">Femme</span>
               <div className="flex items-center">
                 <input
                   type="radio"
                   className="invisible"
-                  value="femme"
+                  value="2"
                   {...register("gender", { required: { value: true, message: "Veuillez choisir un genre" }})}
                   ref={womenRef}
-                  onClick={() => handleGenderChecked("femme")}
+                  onClick={() => handleGenderChecked(2)}
                 />
                 <div className="rounded-full w-[14px] h-[14px] outline outline-1 outline-black flex items-center justify-center relative">
-                  {genderChecked === "femme" && <div className="rounded-full w-[10px] h-[10px] bg-black"></div>}
+                  {genderChecked === 2 && <div className="rounded-full w-[10px] h-[10px] bg-black"></div>}
                 </div>
               </div>
             </div>

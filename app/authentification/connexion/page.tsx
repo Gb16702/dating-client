@@ -2,6 +2,7 @@ import AuthForm from "@/app/components/Forms/AuthForm";
 import SocialAuth from "@/app/components/Forms/SocialAuth";
 import Link from "next/link";
 
+
 export default function Connexion(): JSX.Element {
   return (
     <div className="w-full h-full">

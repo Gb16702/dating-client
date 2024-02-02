@@ -3,11 +3,18 @@
 import { useEffect, useState } from "react";
 import ConfigForm from "./Forms/ConfigForm";
 import Arrow from "./Icons/Arrow";
+import { CitiesType } from "./Forms/config/Cities";
+import { InterestType } from "./Forms/config/AdditionalInformations";
 
 export type Step = {
   current: number;
-  progress: number;
   total: number;
+};
+
+type ConfigProps = {
+  cities: CitiesType;
+  interests: InterestType[];
+  sessionId: string | undefined;
 };
 
 type Text = {
@@ -15,15 +22,14 @@ type Text = {
   message: string;
 };
 
-export default function Config(): JSX.Element {
+export default function Config({ cities, interests, sessionId }: ConfigProps): JSX.Element {
   const [text, setText] = useState<Text>({
     title: "",
     message: "",
   });
   const [step, setStep] = useState<Step>({
-    current: 4,
-    progress: 1,
-    total: 4,
+    current: 7,
+    total: 7,
   });
 
   useEffect(() => {
@@ -58,13 +64,40 @@ export default function Config(): JSX.Element {
         message: "Vous pourrez modifier ce paramètre plus tard",
       }));
     }
+
+    if (step.current === 5) {
+      setText((prev: Text) => ({
+        ...prev,
+        title: "Ma ville",
+        message: "Indiquez votre ville de résidence",
+      }));
+    }
+
+    if (step.current === 6) {
+      setText((prev: Text) => ({
+        ...prev,
+        title: "Informations supplémentaires",
+        message: "Sélectionne tes photos, tes centres d'intérêts et écris ta bio",
+      }));
+    }
+
+    if (step.current === 7) {
+      setText((prev: Text) => ({
+        ...prev,
+        title: "Mes goûts musicaux",
+        message: "Sélectionne tes sons préférés venant de Spotify",
+      }));
+    }
   }, [step]);
+
+  useEffect(() => {
+    console.log(step);
+  }, []);
 
   function handleStepChanges(type: "next" | "previous") {
     setStep((prev: Step) => ({
       ...prev,
       current: type === "next" ? prev.current + 1 : prev.current - 1,
-      progress: prev.progress + 1,
     }));
   }
 
@@ -83,7 +116,13 @@ export default function Config(): JSX.Element {
       </small>
       <h2 className={`font-bold text-[21px]`}>{text.title}</h2>
       <p className="text-subtitle_foreground text-[13px]">{text.message}</p>
-      <ConfigForm step={step} onNextStep={() => handleStepChanges("next")} onPreviousStep={() => handleStepChanges("previous")} />
+      <ConfigForm
+        data={step.current === 5 ? cities : interests}
+        step={step}
+        onNextStep={() => handleStepChanges("next")}
+        onPreviousStep={() => handleStepChanges("previous")}
+        sessionId={sessionId}
+      />
     </>
   );
 }

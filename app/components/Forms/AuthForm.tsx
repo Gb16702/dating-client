@@ -90,7 +90,7 @@ export default function AuthForm({ type }: AuthFormProps): JSX.Element {
   return (
     <>
       {complete && type === "register" && (
-        <Polygon>
+        <Polygon additionalClasses="p-4">
           <h1 className="font-bold text-[21px]">Inscription réussie ! </h1>
           <h3 className="text-long_foreground text-[13px] mt-3">
             Félicitations ! Avant de commencer, donnons vie à votre profil pour qu'il reflète au mieux votre personnalité et vos goûts musicaux.

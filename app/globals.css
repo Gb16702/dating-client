@@ -2,7 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-button.default:hover, button.default:disabled {
+button.default:hover,
+button.default:disabled {
   @apply bg-zinc-700 !important;
 }
 
@@ -55,14 +56,80 @@ button.default:hover, button.default:disabled {
   stroke: #fff;
 }
 
-
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
 /* Pour Firefox */
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 1000px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #dfdfdf;
+  border-radius: 1000px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #ddd;
+}
+
+.icon_bars {
+  display: flex;
+  align-items: flex-end;
+  height: 20px;
+  position: absolute;
+  z-index: 10;
+}
+
+.icon_bar {
+  width: 4px;
+  margin: 0 2px;
+  background-color: white;
+  border-radius: 5px;
+  animation: bounce 0.8s infinite ease-in-out;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    height: 3px;
+  }
+  25% {
+    height: 18px;
+  }
+  50% {
+    height: 16px;
+  }
+  75% {
+    height: 6px;
+  }
+}
+
+.icon_bar:nth-child(1) {
+  animation-delay: 0s;
+}
+.icon_bar:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.icon_bar:nth-child(3) {
+  animation-delay: 0.4s;
+}
+.icon_bar:nth-child(4) {
+  animation-delay: 0.6s;
 }

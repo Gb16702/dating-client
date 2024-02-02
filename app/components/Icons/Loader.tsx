@@ -1,4 +1,8 @@
-export default function Loader(): JSX.Element {
+type LoaderProps = {
+  stroke?: string
+}
+
+export default function Loader({stroke}: LoaderProps): JSX.Element {
   return (
     <>
       <svg
@@ -11,6 +15,7 @@ export default function Loader(): JSX.Element {
         <circle
           className="circle"
           fill="none"
+          stroke={stroke ?? "#fff"}
           strokeWidth="8"
           strokeLinecap="round"
           cx="33"

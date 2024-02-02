@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       colors: {
         accent: "#3E21F4",
+        accent_blue: "#110CFE",
         accent_transparent: "rgba(62, 33, 244, 0.15)",
         long_foreground: "#828282",
         subtitle_foreground: "#ABA9A9",

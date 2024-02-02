@@ -60,7 +60,7 @@ export default function BirthDate({ onNextStep, onBirthDateChange, initialBirthD
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-row w-[400px] flex-1 pt-[20px] gap-x-3">
+        <div className="flex flex-row w-[400px] max-sm:w-full flex-1 pt-[20px] gap-x-3">
           <div>
             <Label name="Jour" id="day" />
             <div className="rounded-md outline outline-1 outline-gray_border h-[35px]">
@@ -68,7 +68,7 @@ export default function BirthDate({ onNextStep, onBirthDateChange, initialBirthD
                 type="number"
                 aria-label="Jour"
                 placeholder="JJ"
-                className="outline-none text-center text-base text-black placeholder-gray_border w-[60px] h-full"
+                className="outline-none text-center text-base text-black placeholder-gray_border w-[60px] max-sm:w-[100%] h-full"
                 {...register("day")}
               />
             </div>
@@ -80,7 +80,7 @@ export default function BirthDate({ onNextStep, onBirthDateChange, initialBirthD
                 type="number"
                 aria-label="Mois"
                 placeholder="MM"
-                className="outline-none text-center text-base text-black placeholder-gray_border w-[60px] h-full"
+                className="outline-none text-center text-base text-black placeholder-gray_border w-[60px] max-sm:w-[100%] h-full"
                 {...register("month")}
               />
             </div>
@@ -92,7 +92,7 @@ export default function BirthDate({ onNextStep, onBirthDateChange, initialBirthD
                 type="number"
                 aria-label="Année"
                 placeholder="AAAA"
-                className="outline-none text-center text-base text-black placeholder-gray_border w-[80px] h-full"
+                className="outline-none text-center text-base text-black placeholder-gray_border w-[80px] max-sm:w-[100%] h-full"
                 {...register("year")}
               />
             </div>

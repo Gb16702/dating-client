@@ -26,7 +26,6 @@ export default function Name({ onNextStep, onNameChange, initialName }: NameProp
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<NameFormInputs>({
     resolver: zodResolver(nameResolver),
@@ -51,21 +50,21 @@ export default function Name({ onNextStep, onNameChange, initialName }: NameProp
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-col w-[400px] flex-1 pt-[20px] gap-y-3">
+        <div className="flex flex-col w-[400px] max-sm:w-full flex-1 pt-[20px] gap-y-3">
           <div>
             <Label name="Prénom" id="firstname" />
-            <InputGroup width="75%" outlineColor="outline-gray_border">
-              <Input ariaLabel="Prénom" type="text" placeholder="Ex: John" {...register("firstName")} />
+            <InputGroup outlineColor="outline-gray_border" additionalClasses="w-[75%] max-sm:w-full">
+              <Input ariaLabel="Prénom" additionalClasses="w-full" type="text" placeholder="Ex: John" {...register("firstName")} />
             </InputGroup>
           </div>
           <div>
             <Label name="Nom" id="lastname" />
-            <InputGroup width="75%" outlineColor="outline-gray_border">
+            <InputGroup outlineColor="outline-gray_border" additionalClasses="w-[75%] max-sm:w-full">
               <Input
                 ariaLabel="Nom"
                 type="text"
                 placeholder="Ex: Doe"
-                additionalClasses="text-black placeholder-gray_border"
+                additionalClasses="text-black placeholder-gray_border w-full"
                 {...register("lastName")}
               />
             </InputGroup>

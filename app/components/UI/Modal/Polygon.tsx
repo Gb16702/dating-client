@@ -2,22 +2,27 @@ import Background from "./Background";
 import type { ReactNode, RefObject } from "react";
 import { useEffect, useRef } from "react";
 
-export default function Polygon({
-  children,
-  closable,
-}: { children: ReactNode } & { closable?: boolean }) {
+type PolygonProps = {
+  children: ReactNode;
+  closable?: boolean;
+  onClickEvent?: () => void;
+  additionalClasses?: string;
+  height?: boolean;
+};
+
+export function isHTMLElement(target: EventTarget): target is HTMLElement {
+  return target instanceof HTMLElement;
+}
+
+export default function Polygon({ children, closable, onClickEvent, additionalClasses }: PolygonProps): JSX.Element {
   const polygonRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
 
-  function isHTMLElement(target: EventTarget): target is HTMLElement {
-    return target instanceof HTMLElement;
-  }
-
   useEffect(() => {
-    const handleClickOutside = ({ target }: MouseEvent) => {
+    const handleClickOutside = ({ target }: MouseEvent): void => {
       if (target && isHTMLElement(target)) {
         if (polygonRef.current && !polygonRef.current.contains(target)) {
-          console.log("clicked outside");
-        }
+          onClickEvent && onClickEvent();
+        };
       }
     };
 
@@ -31,9 +36,8 @@ export default function Polygon({
     <>
       <Background />
       <div
-        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] bg-white z-20 rounded-[12px] p-4"
-        ref={polygonRef}
-      >
+        className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white z-20 rounded-[12px] overflow-hidden ${additionalClasses}`}
+        ref={polygonRef}>
         {children}
       </div>
     </>

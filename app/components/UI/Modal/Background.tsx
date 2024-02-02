@@ -1,13 +1,7 @@
-type ModalBackground = {
-  intensity?: string;
-};
-
-export default function Background({
-  intensity,
-}: ModalBackground): JSX.Element {
+export default function Background(): JSX.Element {
   return (
     <div
-      className={`fixed bg-black/[.5] h-screen w-full top-0 left-0 z-10 backdrop-blur-[3px]`}
+      className={`fixed bg-black/[.32] h-screen w-full top-0 left-0 z-10 backdrop-blur-[3px]`}
     ></div>
   );
 }

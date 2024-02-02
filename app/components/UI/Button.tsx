@@ -17,6 +17,7 @@ export default function Button({variant, children, disabled, customClasses, onCl
       backgroundColor: "white",
       border: "1px solid #F0F0F0",
     },
+    custom: {}
   };
 
   const dynamicButtonStyles = {
