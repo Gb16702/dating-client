@@ -79,7 +79,6 @@ export default function AuthForm({ type }: AuthFormProps): JSX.Element {
       });
       setId(userId);
       setComplete(true);
-      router.refresh();
     } catch (err) {
       console.log(err);
     } finally {
@@ -87,16 +86,21 @@ export default function AuthForm({ type }: AuthFormProps): JSX.Element {
     }
   };
 
+  function onCompleteRedirect() {
+    router.refresh();
+  }
+
   return (
     <>
       {complete && type === "register" && (
-        <Polygon additionalClasses="p-4">
+        <Polygon additionalClasses="p-4 max-sm:w-[95%] max-sm:h-[220px] flex flex-col">
           <h1 className="font-bold text-[21px]">Inscription réussie ! </h1>
-          <h3 className="text-long_foreground text-[13px] mt-3">
+          <h3 className="text-long_foreground text-[13px] mt-3 max-sm:text-[14px]">
             Félicitations ! Avant de commencer, donnons vie à votre profil pour qu'il reflète au mieux votre personnalité et vos goûts musicaux.
           </h3>
+          <div className="flex-grow"></div>
           <div className="mt-[35px]">
-            <Button variant="default" customClasses="px-4 font-bold tracking-wide rounded-[8px]" onClick={() => router.push("/profile")}>
+            <Button variant="default" customClasses="px-4 font-bold tracking-wide rounded-[8px] max-sm:w-full" onClick={onCompleteRedirect}>
               <Link href={`/${id}/profil/configuration`}>Configurer le profil</Link>
             </Button>
           </div>
@@ -122,9 +126,11 @@ export default function AuthForm({ type }: AuthFormProps): JSX.Element {
             <InputGroup name="Mot de passe">
               <Input type={visible ? "text" : "password"} ariaLabel="Mot de passe" placeholder="•••••••" id="password" {...register("password")} />
               <div className="absolute top-1/2 -translate-y-1/2 right-3 flex items-center justify-center gap-x-2">
+                {type === "register" && (
                 <button aria-label="Générer un mot de passe" type="button" onClick={generatePassword}>
                   <Sparkles />
                 </button>
+                )}
                 <button aria-label="Afficher / Masquer le mot de passe" type="button" onClick={handleClick}>
                   {visible ? <EyeOff /> : <Eye />}
                 </button>
@@ -133,7 +139,7 @@ export default function AuthForm({ type }: AuthFormProps): JSX.Element {
           </div>
         </div>
         <div className="mt-[20px]">
-          <Button variant="default" customClasses="rounded-[9px] w-[340px]" disabled={loading}>
+          <Button variant="default" customClasses="rounded-[9px] w-[340px] font-semibold" disabled={loading}>
             {loading ? <Loader /> : type === "login" ? "Se connecter" : "S'inscrire"}
           </Button>
         </div>

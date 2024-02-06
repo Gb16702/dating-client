@@ -58,7 +58,7 @@ export default function Navigation({ isAdmin }: NavigationProps): JSX.Element {
       <header className="w-full h-full">
         <nav className="flex flex-col items-center justify-center w-full h-full gap-y-5">
           {navigationItems.map((item, index) => (
-            <Link href={item.href} key={index} className={`flex justify-start w-full gap-x-5 h-[42px] items-center px-2 rounded-[10px] ${activeLink(item.href) && "bg-accent_blue/[.05] text-accent_blue"}`}>
+            <Link href={item.href} key={index} className={`flex justify-start w-full gap-x-5 h-[42px] items-center px-2 rounded-[10px] ${activeLink(item.href) && "bg-accent_blue/[.10] text-accent_blue"}`}>
               <span className="flex flex-col items-center justify-center gap-y-1">{item.icon}</span>
               <span className="text-[15px] font-medium">{item.name}</span>
             </Link>

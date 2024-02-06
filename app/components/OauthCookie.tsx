@@ -26,6 +26,7 @@ export default function OauthCookie({ token, user }: { token: string; user: any 
     }
 
     setSession(user);
+    router.replace("/");
   }, [token]);
 
   return <Loader />;

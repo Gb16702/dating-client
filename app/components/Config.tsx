@@ -28,7 +28,7 @@ export default function Config({ cities, interests, sessionId }: ConfigProps): J
     message: "",
   });
   const [step, setStep] = useState<Step>({
-    current: 7,
+    current: 1,
     total: 7,
   });
 
