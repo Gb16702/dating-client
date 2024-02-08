@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -15,7 +15,6 @@ type NavigationProps = {
 };
 
 export default function Navigation({ isAdmin }: NavigationProps): JSX.Element {
-
   const pathname = usePathname();
 
   const navigationItems: NavigationItems[] = [
@@ -43,7 +42,7 @@ export default function Navigation({ isAdmin }: NavigationProps): JSX.Element {
 
   if (isAdmin) {
     navigationItems.push({
-      name: "Admin",
+      name: "Administration",
       icon: <Icons.Administration classes={`w-4 h-4 fill-none w-6 h-6 ${pathname === "/admin" ? "stroke-accent" : "stroke-black"}`} />,
       href: "/admin",
     });
@@ -56,11 +55,16 @@ export default function Navigation({ isAdmin }: NavigationProps): JSX.Element {
   return (
     <>
       <header className="w-full h-full">
-        <nav className="flex flex-col items-center justify-center w-full h-full gap-y-5">
+        <nav className="flex flex-col items-center justify-center w-full h-full gap-y-5 max-md:gap-2">
           {navigationItems.map((item, index) => (
-            <Link href={item.href} key={index} className={`flex justify-start w-full gap-x-5 h-[42px] items-center px-2 rounded-[10px] ${activeLink(item.href) && "bg-accent_blue/[.10] text-accent_blue"}`}>
-              <span className="flex flex-col items-center justify-center gap-y-1">{item.icon}</span>
-              <span className="text-[15px] font-medium">{item.name}</span>
+            <Link
+              href={item.href}
+              key={index}
+              className={`flex justify-start w-full gap-x-5 h-[42px] items-center px-2 max-md:p-0 rounded-[10px] ${
+                activeLink(item.href) && "bg-accent_blue/[.10] max-md:bg-transparent text-accent_blue"
+              }`}>
+              <span className="flex flex-col items-center justify-center gap-y-1 max-md:hidden">{item.icon}</span>
+              <span className="text-[15px] font-medium  max-md:text-sm">{item.name}</span>
             </Link>
           ))}
         </nav>

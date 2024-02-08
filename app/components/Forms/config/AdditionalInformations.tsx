@@ -219,7 +219,6 @@ export default function AdditionalInformations({
           </div>
         </div>
         <div className="mt-4">
-          <label className="text-[12px] font-medium"></label>
           <Controller
             name="bio"
             control={control}

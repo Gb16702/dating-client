@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 
-export default function Button({variant, children, disabled, customClasses, onClick}: ButtonType & { children: ReactNode }): JSX.Element {
+export default function Button({variant, children, disabled, customClasses, type, onClick}: ButtonType & { children: ReactNode }): JSX.Element {
   let buttonBackground: Record<ButtonType["variant"], Record<string, string>> = {
     default: {
       backgroundColor: "black",
@@ -34,6 +34,7 @@ export default function Button({variant, children, disabled, customClasses, onCl
       <button
         style={dynamicButtonStyles}
         disabled={disabled}
+        type={type ?? "submit"}
         className={`text-[12px] px-2 h-[40px] flex justify-center items-center relative transition-colors duration-300 ${variant} ${customClasses}
         `}
         onClick={onClick}

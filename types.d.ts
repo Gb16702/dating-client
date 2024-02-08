@@ -3,5 +3,6 @@ type ButtonType = {
   width?: string;
   disabled?: boolean;
   customClasses?: string;
+  type?: "button" | "submit" | "reset";
   onClick?: any ;
 }

@@ -5,15 +5,13 @@ import Card from "./Card";
 export default function MeetUsersLoading({ size }: { size: number }): JSX.Element {
   return (
     <>
-      <div className="flex justify-center items-center gap-x-2">
+      <div className="flex justify-center items-center gap-x-2 w-full">
         {Array.from({ length: size }, (_, i) => (
-          <div key={i}>
-            <Card loading={true}>
-              <div className="absolute top-10 left-1/2 -translate-x-1/2 rounded-full w-[95px] h-[95px] bg-whitish_background animate-pulse"></div>
-              <div className="absolute top-[155px] left-1/2 -translate-x-1/2 rounded-full w-[100px] h-[24px] bg-whitish_background animate-pulse"></div>
-              <div className="absolute top-[195px] left-1/2 -translate-x-1/2 rounded-full w-[180px] h-[20px] bg-whitish_background animate-pulse"></div>
-            </Card>
-          </div>
+          <Card loading={true}>
+            <div className="absolute top-10 left-1/2 -translate-x-1/2 rounded-full w-[95px] h-[95px] bg-whitish_background animate-pulse"></div>
+            <div className="absolute top-[155px] left-1/2 -translate-x-1/2 rounded-full w-[100px] h-[24px] bg-whitish_background animate-pulse"></div>
+            <div className="absolute top-[195px] left-1/2 -translate-x-1/2 rounded-full w-[180px] h-[20px] bg-whitish_background animate-pulse"></div>
+          </Card>
         ))}
       </div>
       {/* <div className="w-full h-[40px] flex flex-row items-center justify-between gap-x-2">

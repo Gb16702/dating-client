@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactPortal, useCallback, useEffect, useRef, useState } from "react";
+import { ReactPortal, useEffect, useRef, useState } from "react";
 import MeetUsersLoading from "./MeetUsersLoading";
 import Card from "./Card";
 import Image from "next/image";
@@ -10,12 +10,15 @@ import Back from "../Icons/Tracks/Back";
 import Pause from "../Icons/Tracks/Pause";
 import Polygon from "../UI/Modal/Polygon";
 import { createPortal } from "react-dom";
+import MeetUsersReportForm from "../Forms/MeetUsersReportForm";
+import Report from "../Icons/Report";
 
 type MeetUsersProps = {
   token: string | undefined;
 };
 
 const montserrat = Montserrat({
+  subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
@@ -96,14 +99,6 @@ export default function MeetUsers({ token }: MeetUsersProps): JSX.Element {
     };
   }, [audioRef]);
 
-  if (loading) {
-    return (
-      <div className="flex flex-col gap-y-4">
-        <MeetUsersLoading size={2} />
-      </div>
-    );
-  }
-
   const handleUserAction = async (action: "swipe" | "like") => {
     if (index < iterableUsers.length) {
       const userId = iterableUsers[index].id;
@@ -160,12 +155,13 @@ export default function MeetUsers({ token }: MeetUsersProps): JSX.Element {
     }
   };
 
-  console.log(iterableUsers[index]);
-
   const modal: ReactPortal | null = modalOpen
     ? createPortal(
-        <Polygon additionalClasses={`w-[500px] max-sm:w-[96%] max-sm:rounded-[7px]`} onClickEvent={undefined} closable>
-          x
+        <Polygon additionalClasses={`w-[500px] max-md:w-[96%] max-md:rounded-[7px]`} onClickEvent={() => setModalOpen(false)} closable>
+          <div className="flex items-center justify-between border-b p-4">
+            <h3 className="font-bold text-accent_blue">Signaler {iterableUsers[index].first_name}</h3>
+          </div>
+          <MeetUsersReportForm uid={iterableUsers[index].id} />
         </Polygon>,
         document.body
       )
@@ -175,12 +171,70 @@ export default function MeetUsers({ token }: MeetUsersProps): JSX.Element {
     <>
       {modal}
       {loading ? (
-        <MeetUsersLoading size={2} />
+        <>
+          <div className="max-md:hidden">
+            <MeetUsersLoading size={2} />
+          </div>
+          <div className="md:hidden w-[270px]">
+            <MeetUsersLoading size={1} />
+          </div>
+        </>
       ) : iterableUsers.length > 0 ? (
         <>
-          <div className="flex flex-col gap-y-2">
-            <div className="flex flex-row justify-center items-center gap-x-2">
-              <Card loading={false}>
+          <div className="flex flex-col gap-y-2 max-md:w-full items-center">
+            <div className="flex flex-row justify-center items-center gap-x-2 w-full">
+              <div className="md:hidden fixed bottom-[12px] left-0 w-[97%] translate-x-[1.5%] bg-white border border-whitish_border rounded-[9px]">
+                <div className="relative w-full flex flex-row justify-between overflow-hidden">
+                  <div className="px-2 absolute bottom-0 w-full">
+                    <div className="h-[2px] bg-accent_blue/[.12]">
+                      <div
+                        className={`bg-accent_blue h-[2px] rounded-full absolute w-full bottom-0`}
+                        style={{ width: `${((currentTrackIndex + 1) / 3) * 100}%` }}></div>
+                    </div>
+                  </div>
+                  <div className="w-[50%] flex items-center justify-start px-2 gap-x-2  py-[12px]">
+                    <Image
+                      src={currentUserTracks[currentTrackIndex].image}
+                      alt="profile picture"
+                      className="rounded-[6px]"
+                      width={45}
+                      height={45}
+                      objectFit="cover"
+                      priority
+                    />
+                    <div className="flex flex-col text-center items-start">
+                      <h2 className="text-[13px] font-semibold">{currentUserTracks[currentTrackIndex].title}</h2>
+                      <h3 className="text-[12px] font-regular text-gray_border" style={{ fontFamily: montserrat.style.fontFamily, fontWeight: 400 }}>
+                        {currentUserTracks[currentTrackIndex].artist}
+                      </h3>
+                    </div>
+                  </div>
+                  <div className="w-[50%] flex items-center justify-end px-2 gap-x-2  py-[8px]">
+                    <div className="flex flex-col text-center items-start">
+                      <div className="mt-2 w-full flex justify-center items-center py-2 pr-3 gap-x-6">
+                        <button onClick={() => handleTrackStatusChange("back")} disabled={currentTrackIndex <= 0}>
+                          <Back className={`${currentTrackIndex > 0 ? "fill-accent_blue" : "fill-accent_blue/[.2]"}`} />
+                        </button>
+                        <button onClick={() => handleTrackStatusChange(playing ? "pause" : "play")}>
+                          {playing ? (
+                            <Pause className={"fill-accent_blue w-[18px] h-[18px]"} />
+                          ) : (
+                            <Player className={"fill-accent_blue w-[18px] h-[18px]"} />
+                          )}
+                        </button>
+                        <button onClick={() => handleTrackStatusChange("next")} disabled={currentTrackIndex >= currentUserTracks.length - 1}>
+                          <Back
+                            className={`${
+                              currentTrackIndex >= currentUserTracks.length - 1 ? "fill-accent_blue/[.2]" : "fill-accent_blue"
+                            } rotate-[180deg]`}
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <Card loading={false} hiddenOnPhoneFormat>
                 <div className=" w-full h-full flex flex-col gap-y-2">
                   {currentUserTracks && currentUserTracks.length > 0 && (
                     <>
@@ -270,7 +324,7 @@ export default function MeetUsers({ token }: MeetUsersProps): JSX.Element {
                           <Image
                             src={iterableUsers[index].profile_picture}
                             alt="profile picture"
-                            className="rounded-full"
+                            className="rounded-full max-md:rounded-[9px]"
                             width={95}
                             height={95}
                             objectFit="cover"
@@ -297,16 +351,29 @@ export default function MeetUsers({ token }: MeetUsersProps): JSX.Element {
                 </div>
               </Card>
             </div>
-
-            <div className="w-full h-[40px] flex flex-row items-center justify-between gap-x-2 text-[14px] font-semibold">
+            <div className="w-full max-md:w-[270px] h-[40px] flex flex-row items-center justify-between gap-x-2 text-[14px] font-semibold">
               <button className="w-1/3 h-full bg-white rounded-[9px] border border-whitish_border" onClick={() => handleUserAction("swipe")}>
-                <span>Suivant</span>
+                <span className="max-md:hidden">Suivant</span>
+                <div className="flex items-center justify-center">
+                  <Back className="fill-accent_blue rotate-[180deg] md:hidden" />
+                </div>
               </button>
               <button className="w-1/3 h-full bg-white rounded-[9px] border border-whitish_border" onClick={() => handleUserAction("like")}>
-                <span>J'aime</span>
+                <span className="max-md:hidden">J'aime</span>
+                <div className="flex items-center justify-center md:hidden">
+                  <Player className={"fill-accent_blue w-[18px] h-[18px]"} />
+                </div>
               </button>
-              <button className="w-1/3 h-full bg-white rounded-[9px] border border-whitish_border" onClick={() => setModalOpen(true)}>
-                <span>Signaler</span>
+              <button
+                className="w-1/3 h-full bg-white rounded-[9px] border border-whitish_border"
+                onClick={e => {
+                  e.stopPropagation();
+                  setModalOpen(true);
+                }}>
+                <span className="max-md:hidden">Signaler</span>
+                <div className="flex items-center justify-center md:hidden">
+                  <Report classes={"stroke-accent_blue w-[18px] h-[18px] rotate-[180deg]"} strokeWidth={2} />
+                </div>
               </button>
             </div>
           </div>
@@ -314,13 +381,13 @@ export default function MeetUsers({ token }: MeetUsersProps): JSX.Element {
       ) : (
         <>
           <div className="flex flex-col gap-y-4">
-            <div className="max-sm:hidden">
+            <div className="max-md:hidden">
               <MeetUsersLoading size={2} />
             </div>
-            <div className="sm:hidden">
+            <div className="md:hidden">
               <MeetUsersLoading size={1} />
             </div>
-            <div className="bg-accent_blue/[.10] border border-whitish_border w-full h-[50px] rounded-[9px] flex items-center justify-center font-medium text-[14px] text-accent_blue">
+            <div className="bg-accent_blue/[.10] px-2 border border-whitish_border w-full h-[50px] rounded-[9px] flex items-center justify-center font-medium text-[14px] text-accent_blue text-center">
               {message ?? "Pas de profils à afficher pour le moment"}
             </div>
           </div>

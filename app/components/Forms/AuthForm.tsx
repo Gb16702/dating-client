@@ -77,6 +77,15 @@ export default function AuthForm({ type }: AuthFormProps): JSX.Element {
         httpOnly: false,
         sameSite: "lax",
       });
+
+      setCookie("uid", userId, {
+        maxAge: 30 * 24 * 60 * 60,
+        path: "/",
+        secure: false,
+        httpOnly: false,
+        sameSite: "lax",
+      });
+
       setId(userId);
       setComplete(true);
     } catch (err) {

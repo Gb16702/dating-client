@@ -6,9 +6,5 @@ import SessionProvider from "../providers/SessionProvider";
 export default function AuthLayout({ children }: { children: ReactNode }) {
   const token: RequestCookie | undefined = cookies().get("token");
 
-  return (
-    <SessionProvider token={token?.value}>
-      {children}
-    </SessionProvider>
-  );
+  return <SessionProvider token={token?.value}>{children}</SessionProvider>;
 }

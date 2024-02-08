@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { type AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { deleteCookie } from "cookies-next";
 import { useSessionStore } from "@/app/stores/sessionStore";
+import Image from "next/image";
 
 type ThumbnailProps = {
   loading: boolean;
@@ -61,8 +62,6 @@ export default function Thumbnail({ properties, loading }: ThumbnailProps) {
     removeSession();
     router.refresh();
   }
-  console.log(properties);
-
   return (
     <>
       {Object.values(properties).every(value => value != undefined) && (
@@ -71,7 +70,14 @@ export default function Thumbnail({ properties, loading }: ThumbnailProps) {
             {loading ? (
               <div className="w-[36px] h-[36px] rounded-full bg-whitish_background animate-pulse" />
             ) : (
-              <img src={properties.avatar} className="w-[36px] h-[36px] rounded-full object-cover" alt="" />
+              <Image
+                src={properties?.avatar ?? ""}
+                width={36}
+                height={36}
+                className="rounded-full"
+                objectFit="cover"
+                alt={properties?.avatar ?? "Image de profil"}
+              />
             )}
             <div className="flex-col">
               <h3 style={{ fontFamily: montserrat.style.fontFamily, fontWeight: 600 }} className="relative top-0.5">
@@ -100,7 +106,7 @@ export default function Thumbnail({ properties, loading }: ThumbnailProps) {
             ...
           </button>
         </div>
-       )}
+      )}
     </>
   );
 }

@@ -11,20 +11,8 @@ type InputPropsType = {
 };
 
 const Input: FC<InputPropsType> = forwardRef<HTMLInputElement, InputPropsType>(
-  (
-    {
-      ariaLabel,
-      type,
-      name,
-      placeholder,
-      width,
-      additionalClasses,
-      id,
-      ...props
-    }: InputPropsType,
-    ref: ForwardedRef<HTMLInputElement>
-  ) => {
-    const DEFAULT_CLASSES: string = `placeholder-subtitle_foreground font-medium text-[12px] text-black outline-none h-full ${
+  ({ ariaLabel, type, name, placeholder, width, additionalClasses, id, ...props }: InputPropsType, ref: ForwardedRef<HTMLInputElement>) => {
+    const DEFAULT_CLASSES: string = `placeholder-subtitle_foreground bg-transparent font-medium text-[12px] text-black outline-none h-full ${
       width ?? "w-auto"
     }`;
 

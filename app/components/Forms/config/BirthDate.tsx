@@ -67,6 +67,7 @@ export default function BirthDate({ onNextStep, onBirthDateChange, initialBirthD
               <input
                 type="number"
                 aria-label="Jour"
+                maxLength={2}
                 placeholder="JJ"
                 className="outline-none text-center text-base text-black placeholder-gray_border w-[60px] max-sm:w-[100%] h-full"
                 {...register("day")}

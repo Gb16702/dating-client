@@ -20,10 +20,18 @@ export default function OauthCookie({ token, user }: { token: string; user: any 
       sameSite: "lax",
     });
 
+    setCookie("uid", user.id, {
+      maxAge: 30 * 24 * 60 * 60,
+      path: "/",
+      secure: false,
+      httpOnly: false,
+      sameSite: "lax",
+    });
+
     user = {
       ...user,
-      token
-    }
+      token,
+    };
 
     setSession(user);
     router.replace("/");

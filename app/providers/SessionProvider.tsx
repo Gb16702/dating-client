@@ -41,5 +41,5 @@ export default function SessionProvider({ children, token }: sessionProviderProp
     socket.emit('event', { my: 'data' })
   })
 
-  return <div>{children}</div>;
+  return <div className="h-full">{children}</div>;
 }
