@@ -134,7 +134,6 @@ export default function Tracks({ sessionId, setAchieved, onTrackChange, initialT
     : null;
 
   const onSubmit: SubmitHandler<any> = () => {
-    console.log("s", selectedTracks);
     onTrackChange(selectedTracks);
     setAchieved(true);
   };

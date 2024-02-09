@@ -3,8 +3,12 @@
 import GeneratePassword from "@/app/utils/generatePassword";
 import { loginSchemaObject } from "@/app/utils/validation/AuthResolver";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { setCookie } from "cookies-next";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import toast from "react-hot-toast";
 import { Eye, EyeOff } from "../Icons/EyeIcons";
 import Loader from "../Icons/Loader";
 import Sparkles from "../Icons/Sparkles";
@@ -12,12 +16,8 @@ import Button from "../UI/Button";
 import Input from "../UI/Input";
 import InputGroup from "../UI/InputGroup";
 import Label from "../UI/Label";
-import { setCookie } from "cookies-next";
-import { useRouter } from "next/navigation";
 import Polygon from "../UI/Modal/Polygon";
-import Link from "next/link";
 import Toast from "../UI/Toast";
-import toast from "react-hot-toast";
 
 type AuthFormInputs = {
   email: string;
@@ -45,28 +45,47 @@ export default function AuthForm({ type }: AuthFormProps): JSX.Element {
     resolver: zodResolver(loginSchemaObject),
   });
 
-  const handleClick: () => void = useCallback(() => setVisible((v: boolean) => !v), []);
-  const generatePassword: () => void = useCallback(() => setValue("password", GeneratePassword(12)), []);
+  const handleClick: () => void = useCallback(
+    () => setVisible((v: boolean) => !v),
+    []
+  );
+  const generatePassword: () => void = useCallback(
+    () => setValue("password", GeneratePassword(12)),
+    []
+  );
 
-  const onSubmit: SubmitHandler<AuthFormInputs> = async (data: AuthFormInputs) => {
+  const onSubmit: SubmitHandler<AuthFormInputs> = async (
+    data: AuthFormInputs
+  ) => {
     console.log(data);
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER}api/authentication/${type === "login" ? "login" : "register"}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER}api/authentication/${
+          type === "login" ? "login" : "register"
+        }`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: data.email,
+            password: data.password,
+          }),
+        }
+      );
 
       const { token, id: userId, message } = await response.json();
 
       if (!response.ok) {
-        toast.custom(t => <Toast message={message} type={response.ok ? "Succès" : "Erreur"} t={t} />);
+        toast.custom((t) => (
+          <Toast
+            message={message}
+            type={response.ok ? "Succès" : "Erreur"}
+            t={t}
+          />
+        ));
         return;
       }
 
@@ -105,12 +124,19 @@ export default function AuthForm({ type }: AuthFormProps): JSX.Element {
         <Polygon additionalClasses="p-4 max-sm:w-[95%] max-sm:h-[220px] flex flex-col">
           <h1 className="font-bold text-[21px]">Inscription réussie ! </h1>
           <h3 className="text-long_foreground text-[13px] mt-3 max-sm:text-[14px]">
-            Félicitations ! Avant de commencer, donnons vie à votre profil pour qu'il reflète au mieux votre personnalité et vos goûts musicaux.
+            Félicitations ! Avant de commencer, donnons vie à votre profil pour
+            qu'il reflète au mieux votre personnalité et vos goûts musicaux.
           </h3>
           <div className="flex-grow"></div>
           <div className="mt-[35px]">
-            <Button variant="default" customClasses="px-4 font-bold tracking-wide rounded-[8px] max-sm:w-full" onClick={onCompleteRedirect}>
-              <Link href={`/${id}/profil/configuration`}>Configurer le profil</Link>
+            <Button
+              variant="default"
+              customClasses="px-4 font-bold tracking-wide rounded-[8px] max-sm:w-full"
+              onClick={onCompleteRedirect}
+            >
+              <Link href={`/${id}/profil/configuration`}>
+                Configurer le profil
+              </Link>
             </Button>
           </div>
         </Polygon>
@@ -120,27 +146,52 @@ export default function AuthForm({ type }: AuthFormProps): JSX.Element {
           <div>
             <Label name="Adresse mail" id="email" />
             <InputGroup name="Adresse mail">
-              <Input type="email" ariaLabel="Adresse mail" placeholder="toi@exemple.com" id="email" {...register("email")} />
+              <Input
+                type="email"
+                additionalClasses="w-full"
+                ariaLabel="Adresse mail"
+                placeholder="toi@exemple.com"
+                id="email"
+                {...register("email")}
+              />
             </InputGroup>
           </div>
           <div>
             <div className="w-full flex justify-between">
               <Label name="Mot de passe" id="password" />
               {type === "login" && (
-                <Link className="text-[12px] font-medium text-subtitle_foreground" href="/forgot-password">
+                <Link
+                  className="text-[12px] font-medium text-subtitle_foreground"
+                  href="/forgot-password"
+                >
                   Mot de passe oublié ?
                 </Link>
               )}
             </div>
             <InputGroup name="Mot de passe">
-              <Input type={visible ? "text" : "password"} ariaLabel="Mot de passe" placeholder="•••••••" id="password" {...register("password")} />
+              <Input
+                type={visible ? "text" : "password"}
+                additionalClasses="w-full"
+                ariaLabel="Mot de passe"
+                placeholder="•••••••"
+                id="password"
+                {...register("password")}
+              />
               <div className="absolute top-1/2 -translate-y-1/2 right-3 flex items-center justify-center gap-x-2">
                 {type === "register" && (
-                <button aria-label="Générer un mot de passe" type="button" onClick={generatePassword}>
-                  <Sparkles />
-                </button>
+                  <button
+                    aria-label="Générer un mot de passe"
+                    type="button"
+                    onClick={generatePassword}
+                  >
+                    <Sparkles />
+                  </button>
                 )}
-                <button aria-label="Afficher / Masquer le mot de passe" type="button" onClick={handleClick}>
+                <button
+                  aria-label="Afficher / Masquer le mot de passe"
+                  type="button"
+                  onClick={handleClick}
+                >
                   {visible ? <EyeOff /> : <Eye />}
                 </button>
               </div>
@@ -148,8 +199,18 @@ export default function AuthForm({ type }: AuthFormProps): JSX.Element {
           </div>
         </div>
         <div className="mt-[20px]">
-          <Button variant="default" customClasses="rounded-[9px] w-[340px] font-semibold" disabled={loading}>
-            {loading ? <Loader /> : type === "login" ? "Se connecter" : "S'inscrire"}
+          <Button
+            variant="default"
+            customClasses="rounded-[9px] w-[340px] font-semibold"
+            disabled={loading}
+          >
+            {loading ? (
+              <Loader />
+            ) : type === "login" ? (
+              "Se connecter"
+            ) : (
+              "S'inscrire"
+            )}
           </Button>
         </div>
       </form>

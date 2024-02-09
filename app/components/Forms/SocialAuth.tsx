@@ -6,10 +6,6 @@ import Button from "../UI/Button";
 import { useEffect } from "react";
 
 export default function SocialAuth(): JSX.Element {
-  useEffect(() => {
-    const value = JSON.parse(atob("eyJtZXNzYWdlIjoxMH0"));
-    console.log(value);
-  }, []);
 
   return (
     <div className="flex items-center flex-row justify-between gap-x-4 mt-[20px]">

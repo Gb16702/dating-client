@@ -143,8 +143,6 @@ export default function AdditionalInformations({
   const onSubmit: SubmitHandler<any> = useCallback((data) => {
     const formData = new FormData();
 
-    console.log("Uploaded Files:", imageFiles);
-
     const updatedData = {
       ...data,
       images: imageFiles,

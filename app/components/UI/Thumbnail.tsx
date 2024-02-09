@@ -74,7 +74,7 @@ export default function Thumbnail({ properties, loading }: ThumbnailProps) {
                 src={properties?.avatar ?? ""}
                 width={36}
                 height={36}
-                className="rounded-full"
+                className="rounded-full w-[36px] h-[36px]"
                 objectFit="cover"
                 alt={properties?.avatar ?? "Image de profil"}
               />

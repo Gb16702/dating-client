@@ -3,8 +3,13 @@ import { cookies } from "next/headers";
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import SessionProvider from "../providers/SessionProvider";
 
-export default function AuthLayout({ children }: { children: ReactNode }) {
+export default async function AuthLayout({ children }: { children: ReactNode }) {
   const token: RequestCookie | undefined = cookies().get("token");
+  const user_id = cookies().get("uid");
 
-  return <SessionProvider token={token?.value}>{children}</SessionProvider>;
+  return (
+    <SessionProvider token={token?.value} user_id={user_id?.value}>
+      {children}
+    </SessionProvider>
+  );
 }

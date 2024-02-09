@@ -14,6 +14,10 @@ type UserProfile = {
   user_id: string;
 }
 
+type UserSecondaryProfilePictures = {
+  picture_url: any
+}[]
+
 type UserSession = {
   id: string;
   email: string;
@@ -22,6 +26,7 @@ type UserSession = {
   is_banned: boolean;
   is_profile_complete: boolean;
   profile: UserProfile;
+  user_secondary_profile_pictures: UserSecondaryProfilePictures;
   token: string;
 }
 

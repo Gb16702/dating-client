@@ -1,16 +1,14 @@
 "use client";
 
 import { Montserrat } from "next/font/google";
-import Navigation from "./Navigation/Navigation";
-import Thumbnail from "../UI/Thumbnail";
-import { useSessionStore } from "../../stores/sessionStore";
-import { useEffect, useState } from "react";
-import Menu from "../Icons/Menu";
-import Polygon from "../UI/Modal/Polygon";
-import Background from "../UI/Modal/Background";
-import Arrow from "../Icons/Arrow";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useSessionStore } from "../../stores/sessionStore";
 import Cross from "../Icons/Cross";
+import Menu from "../Icons/Menu";
+import Background from "../UI/Modal/Background";
+import Thumbnail from "../UI/Thumbnail";
+import Navigation from "./Navigation/Navigation";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -26,13 +24,16 @@ export default function Sidebar() {
     if (currentSession) {
       const timer = setTimeout(() => {
         setLoading(false);
-      }, 444444444444440);
+      }, 0);
+
+      console.log(currentSession, "curr");
 
       return () => clearTimeout(timer);
     }
   }, [currentSession]);
 
   const properties = {
+    id: currentSession?.id,
     token: currentSession?.token,
     is_admin: currentSession?.is_admin,
     username: currentSession?.profile?.first_name,
@@ -54,11 +55,14 @@ export default function Sidebar() {
                   </div>
                   <div className="h-full flex items-center justify-center"></div>
                   <div className="flex items-center justify-center">
-                    <Cross classes={"w-4 h-4 cursor-pointer"} onClick={() => setOpen(false)} />
+                    <Cross
+                      classes={"w-4 h-4 cursor-pointer"}
+                      onClick={() => setOpen(false)}
+                    />
                   </div>
                 </div>
                 <div className="flex justify-center items-center flex-grow py-4 px-4">
-                  <Navigation isAdmin={true} />
+                  <Navigation id={currentSession?.id} isAdmin={true} />
                 </div>
               </div>
             </div>
@@ -77,7 +81,11 @@ export default function Sidebar() {
                   <div className="flex flex-col items-start justify-center text-[14px]">
                     <h2 className="font-semibold">{properties.username}</h2>
                     <h3 className="text-[12px] text-subtitle_foreground">
-                      {typeof Object.values(properties).map(value => value != undefined) && properties.is_admin ? "Administrateur" : "Utilisateur"}
+                      {typeof Object.values(properties).map(
+                        (value) => value != undefined
+                      ) && properties.is_admin
+                        ? "Administrateur"
+                        : "Utilisateur"}
                     </h3>
                   </div>
                 </div>
@@ -91,7 +99,7 @@ export default function Sidebar() {
           <h1 className={`text-[18px] ${montserrat.className}`}>HARMONY</h1>
         </div>
         <div className="h-[84%] flex items-center justify-center flex-col w-full px-6 border-y border-whitish_border">
-          <Navigation isAdmin={true} />
+          <Navigation id={currentSession?.id} isAdmin={true} />
         </div>
         <div className="flex items-center h-[8%] px-8">
           <Thumbnail properties={properties} loading={loading} />

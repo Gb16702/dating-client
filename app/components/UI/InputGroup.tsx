@@ -11,16 +11,29 @@ type InputGroupProps = {
   additionalClasses?: string;
 };
 
-function InputGroup({ children, name, width, outlineColor, focusColor, onClick, additionalClasses }: InputGroupProps) {
+function InputGroup({
+  children,
+  name,
+  width,
+  outlineColor,
+  focusColor,
+  onClick,
+  additionalClasses,
+}: InputGroupProps) {
   return (
     <>
       <div
-        className={`outline outline-1 h-[40px] flex items-center px-2 text-sm rounded-[9px] relative transition-all duration-300 ${focusColor ? focusColor : "focus-within:outline-black"} ${outlineColor ?? "outline-whitish_border"} ${additionalClasses ?? ""}`}
+        className={`outline outline-1 h-[40px] flex items-center px-2 text-sm rounded-[9px] relative transition-all duration-300 ${
+          focusColor ? focusColor : "focus-within:outline-black"
+        } ${outlineColor ?? "outline-whitish_border"} ${
+          additionalClasses ?? ""
+        }`}
         style={{
           marginTop: name && "4px",
           width: width && width,
         }}
-        onClick={onClick}>
+        onClick={onClick}
+      >
         {children}
       </div>
     </>

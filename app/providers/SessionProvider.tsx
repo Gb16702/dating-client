@@ -1,45 +1,60 @@
 "use client";
-
-import { useSessionStore } from "../stores/sessionStore";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import { useSessionStore } from "../stores/sessionStore";
+import { useSocketStore } from "../stores/socketStore";
 
-type sessionProviderProps = {
+type SessionProviderProps = {
   token: string | undefined;
   children: ReactNode;
+  user_id: string | undefined;
 };
 
-async function fetcher(token: sessionProviderProps["token"]) {
-  console.log(token);
-  const response = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_SERVER}api/users/me`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+async function fetchUserData(token: string | undefined) {
+  if (!token) return null;
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_SERVER}api/users/me`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-  const { data } = await response.json();
-  return data;
+    if (!response.ok) throw new Error('Failed to fetch user data');
+
+    const { data } = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return null;
+  }
 }
 
-export default function SessionProvider({ children, token }: sessionProviderProps) {
+export default function SessionProvider({ children, token, user_id }: SessionProviderProps) {
   const { setSession, currentSession } = useSessionStore();
+  const { socket, connect, disconnect } = useSocketStore();
 
-  if (!currentSession) {
-    fetcher(token).then(data => {
-      setSession({
-        ...data,
-        token,
+  console.log(user_id)
+
+  useEffect(() => {
+    if (!currentSession && token) {
+      fetchUserData(token).then(data => {
+        if (data) {
+          setSession({
+            ...data,
+            token,
+          });
+        }
       });
-    });
-  }
+    }
 
-  const socket = io("http://localhost:20000")
-  socket.on('news', (data) => {
-    console.log(data)
-    socket.emit('event', { my: 'data' })
-  })
+    connect(user_id);
 
-  return <div className="h-full">{children}</div>;
+    return () => {
+      disconnect();
+    };
+  }, []);
+
+  return <div>{children}</div>;
 }
