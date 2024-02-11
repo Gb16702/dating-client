@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { additionalInformationsResolver } from "@/app/utils/validation/config/AdditionalInformationsResolver";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
 
 type AdditionalInformationsProps = {
   onNextStep: () => void;
@@ -36,7 +37,13 @@ export default function AdditionalInformations({
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
   const [selectedInterests, setSelectedInterests] = useState<InterestType[]>([]);
 
-  const { control, handleSubmit, setValue, clearErrors, formState: { errors } } = useForm<FormType>({
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    clearErrors,
+    formState: { errors },
+  } = useForm<FormType>({
     resolver: zodResolver(additionalInformationsResolver),
     defaultValues: {
       bio: "",
@@ -47,44 +54,50 @@ export default function AdditionalInformations({
 
   const fileInputRefs: MutableRefObject<HTMLInputElement[]> = useRef<HTMLInputElement[]>([]);
 
-  const handleImageChange = useCallback((index: number, e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length) {
-      const file = e.target.files[0];
-      const fileReader = new FileReader();
+  const handleImageChange = useCallback(
+    (index: number, e: ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files && e.target.files.length) {
+        const file = e.target.files[0];
+        const fileReader = new FileReader();
 
-      fileReader.onload = e => {
-        const newImagePreviews: string[] = [...imagePreviews];
-        newImagePreviews[index] = e.target?.result as string;
-        setImagePreviews(newImagePreviews);
+        fileReader.onload = e => {
+          const newImagePreviews: string[] = [...imagePreviews];
+          newImagePreviews[index] = e.target?.result as string;
+          setImagePreviews(newImagePreviews);
 
-        const newImageFiles: File[] = [...imageFiles];
-        newImageFiles[index] = file;
-        setImageFiles(newImageFiles);
-      };
+          const newImageFiles: File[] = [...imageFiles];
+          newImageFiles[index] = file;
+          setImageFiles(newImageFiles);
+        };
 
-      fileReader.readAsDataURL(file);
-    }
-  }, [imagePreviews, imageFiles]);
+        fileReader.readAsDataURL(file);
+      }
+    },
+    [imagePreviews, imageFiles]
+  );
 
   const triggerFileInputClick: (index: number) => () => void = (index: number) => () => {
     fileInputRefs.current[index].click();
   };
 
-  const handleDelete = useCallback((e: React.MouseEvent<HTMLButtonElement>, index: number) => {
-    e.stopPropagation();
+  const handleDelete = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>, index: number) => {
+      e.stopPropagation();
 
-    const newImagePreviews: string[] = [...imagePreviews];
-    newImagePreviews[index] = "";
-    setImagePreviews(newImagePreviews);
+      const newImagePreviews: string[] = [...imagePreviews];
+      newImagePreviews[index] = "";
+      setImagePreviews(newImagePreviews);
 
-    const newImageFiles: File[] = [...imageFiles];
-    newImageFiles.splice(index, 1);
-    setImageFiles(newImageFiles);
+      const newImageFiles: File[] = [...imageFiles];
+      newImageFiles.splice(index, 1);
+      setImageFiles(newImageFiles);
 
-    if (fileInputRefs.current[index]) {
-      fileInputRefs.current[index].value = "";
-    }
-  }, [imagePreviews, imageFiles])
+      if (fileInputRefs.current[index]) {
+        fileInputRefs.current[index].value = "";
+      }
+    },
+    [imagePreviews, imageFiles]
+  );
 
   function handleZoom(e: React.MouseEvent<HTMLDivElement>, preview: string) {
     e.stopPropagation();
@@ -100,7 +113,13 @@ export default function AdditionalInformations({
   const zoomModal: ReactPortal | null = zoomedImage
     ? createPortal(
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-3 z-50" onClick={handleCloseZoom}>
-          <img src={zoomedImage} alt="Zoomed" className="w-[60%] h-[60%] rounded-[16px] object-cover max-sm:w-[100%] max-sm:h-[50%]" />
+          <Image
+            src={zoomedImage}
+            alt="Zoomed"
+            width={500}
+            height={500}
+            className="w-[60%] h-[60%] rounded-[16px] object-cover max-sm:w-[94%] max-sm:h-[40%] max-w-[420px] max-h-[420px]"
+          />
         </div>,
         document.body
       )
@@ -129,28 +148,34 @@ export default function AdditionalInformations({
     setValue("bio", initialAdditionalInformations.bio || "");
   }, [initialAdditionalInformations]);
 
-  const handleSelectedInterests = useCallback((interest: InterestType) => {
-    const newSelectedInterests = [...selectedInterests];
-    const index = newSelectedInterests.findIndex(item => item.id === interest.id);
+  const handleSelectedInterests = useCallback(
+    (interest: InterestType) => {
+      const newSelectedInterests = [...selectedInterests];
+      const index = newSelectedInterests.findIndex(item => item.id === interest.id);
 
-    index === -1 ? newSelectedInterests.push(interest) : newSelectedInterests.splice(index, 1);
+      index === -1 ? newSelectedInterests.push(interest) : newSelectedInterests.splice(index, 1);
 
-    setSelectedInterests(newSelectedInterests);
-    setValue("interests", newSelectedInterests);
-    clearErrors("interests");
-  }, [selectedInterests, setValue, clearErrors]);
+      setSelectedInterests(newSelectedInterests);
+      setValue("interests", newSelectedInterests);
+      clearErrors("interests");
+    },
+    [selectedInterests, setValue, clearErrors]
+  );
 
-  const onSubmit: SubmitHandler<any> = useCallback((data) => {
-    const formData = new FormData();
+  const onSubmit: SubmitHandler<any> = useCallback(
+    data => {
+      const formData = new FormData();
 
-    const updatedData = {
-      ...data,
-      images: imageFiles,
-    };
+      const updatedData = {
+        ...data,
+        images: imageFiles,
+      };
 
-    onAdditionalInformationChange(updatedData);
-    onNextStep();
-  }, [imageFiles, onAdditionalInformationChange]);
+      onAdditionalInformationChange(updatedData);
+      onNextStep();
+    },
+    [imageFiles, onAdditionalInformationChange]
+  );
 
   function getErrorMessage(): string | null {
     if (errors?.interests) return errors?.interests?.message ?? null;
@@ -170,7 +195,7 @@ export default function AdditionalInformations({
               onClick={triggerFileInputClick(index)}>
               {preview ? (
                 <div className="relative w-full h-full" onClick={e => handleZoom(e, preview)}>
-                  <img src={preview} alt={`Aperçu ${index}`} className="w-full h-full object-cover" />
+                  <Image src={preview} height={100} width={100} alt={`Aperçu ${index}`} className="w-full h-full object-cover" />
                   {index === 0 && (
                     <div className="absolute bottom-[6px] left-1 w-fit px-2 h-[17px] rounded-full bg-white/[.4] flex items-center justify-center">
                       <p className="text-[10px] font-semibold text-white">Principale</p>

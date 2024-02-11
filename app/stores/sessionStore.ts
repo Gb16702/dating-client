@@ -1,7 +1,5 @@
 import { type StoreApi, type UseBoundStore, create } from "zustand";
 
-
-
 type UserProfile = {
   gender_id: number;
   city_id: number;
@@ -12,11 +10,17 @@ type UserProfile = {
   profile_picture: string;
   is_profile_displayed: boolean;
   user_id: string;
-}
+};
 
 type UserSecondaryProfilePictures = {
-  picture_url: any
-}[]
+  picture_url: any;
+}[];
+
+type UserFavoriteTracks = {
+  id: number;
+  track_id: string;
+  user_id: string;
+}[];
 
 type UserSession = {
   id: string;
@@ -27,18 +31,18 @@ type UserSession = {
   is_profile_complete: boolean;
   profile: UserProfile;
   user_secondary_profile_pictures: UserSecondaryProfilePictures;
+  favorite_tracks: UserFavoriteTracks;
   token: string;
-}
+};
 
 type SessionState = {
   currentSession: UserSession | null;
   setSession: (session: UserSession) => void;
-  removeSession: () => void,
-
+  removeSession: () => void;
 };
 
-export const useSessionStore: UseBoundStore<StoreApi<SessionState>> = create<SessionState>((set) => ({
+export const useSessionStore: UseBoundStore<StoreApi<SessionState>> = create<SessionState>(set => ({
   currentSession: null,
-  setSession: (session) => set({ currentSession: session }),
+  setSession: session => set({ currentSession: session }),
   removeSession: () => set({ currentSession: null }),
 }));

@@ -32,7 +32,7 @@ export default function CustomProfileNavigation(): JSX.Element {
               className={`${
                 isActive(item.name.toLowerCase()) &&
                 "border-b border-accent_blue"
-              } h-[73px] px-8 flex items-center bg-white`}
+              } h-[72px] px-8 flex items-center bg-white`}
               onClick={() => setActive(item.name.toLowerCase())}
             >
               <div>

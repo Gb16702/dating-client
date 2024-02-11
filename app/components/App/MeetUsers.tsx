@@ -12,6 +12,7 @@ import Polygon from "../UI/Modal/Polygon";
 import { createPortal } from "react-dom";
 import MeetUsersReportForm from "../Forms/MeetUsersReportForm";
 import Report from "../Icons/Report";
+import Flip from "../Icons/Flip";
 
 type MeetUsersProps = {
   token: string | undefined;
@@ -254,7 +255,7 @@ export default function MeetUsers({ token }: MeetUsersProps): JSX.Element {
                           {currentUserTracks[currentTrackIndex].artist}
                         </h2>
                         <h3 className="text-[12px] font-medium">
-                          {currentUserTracks[currentTrackIndex].title} - {currentUserTracks[currentTrackIndex].album ?? ""}
+                          {currentUserTracks[currentTrackIndex].title} - {currentUserTracks[currentTrackIndex].album.substr(0, 10) + "..." ?? ""}
                         </h3>
                       </div>
                       <div className="mt-8 px-5">
@@ -286,7 +287,7 @@ export default function MeetUsers({ token }: MeetUsersProps): JSX.Element {
                 </div>
               </Card>
               <Card loading={false}>
-                <div className=" w-full h-full flex flex-col gap-y-2">
+                <div className=" w-full h-full flex flex-col gap-y-2 relative">
                   <>
                     {flipped ? (
                       <>
@@ -294,7 +295,7 @@ export default function MeetUsers({ token }: MeetUsersProps): JSX.Element {
                           <Image
                             src={iterableUsers[index].profile_picture}
                             alt="profile picture"
-                            className="rounded-full"
+                            className="rounded-full w-[33px] h-[33px]"
                             width={33}
                             height={33}
                             objectFit="cover"
@@ -311,9 +312,11 @@ export default function MeetUsers({ token }: MeetUsersProps): JSX.Element {
                           <p className="text-black text-[13px]">{iterableUsers[index].bio}</p>
                         </div>
                         <div className="mt-2 text-[14px] font-medium text-center flex flex-grow items-end justify-center">
-                          <div className="h-[50px]">
-                            <button onClick={() => setFlipped(false)} className="text-black hover:text-accent_blue transition-colors duration-200">
-                              Retour
+                          <div className="w-full flex items-center justify-center h-[67px]">
+                            <button
+                              onClick={() => setFlipped(false)}
+                              className="transition-colors duration-200 font-semibold flex items-center justify-center relative bottom-3">
+                              <Flip classes="stroke-accent_blue w-[20px] h-[20px]" strokeWidth={2.5} />
                             </button>
                           </div>
                         </div>
@@ -324,7 +327,7 @@ export default function MeetUsers({ token }: MeetUsersProps): JSX.Element {
                           <Image
                             src={iterableUsers[index].profile_picture}
                             alt="profile picture"
-                            className="rounded-full max-md:rounded-[9px]"
+                            className="rounded-full max-md:rounded-[9px] w-[95px] h-[95px]"
                             width={95}
                             height={95}
                             objectFit="cover"
@@ -340,9 +343,11 @@ export default function MeetUsers({ token }: MeetUsersProps): JSX.Element {
                             {iterableUsers[index].distance < 5 ? "Très proche" : `${iterableUsers[index].distance} km`}
                           </h3>
                         </div>
-                        <div className="mt-2 text-[14px] font-medium text-center flex items-center justify-center h-[20%] border-t border-whitish_border">
-                          <button onClick={() => setFlipped(true)} className="text-accent_blue transition-colors duration-200 font-semibold">
-                            Voir la bio
+                        <div className="w-full flex items-center justify-center">
+                          <button
+                            onClick={() => setFlipped(true)}
+                            className="transition-colors duration-200 font-semibold flex items-center justify-center relative bottom-3">
+                            <Flip classes="stroke-accent_blue w-[20px] h-[20px]" strokeWidth={2.5} />
                           </button>
                         </div>
                       </>

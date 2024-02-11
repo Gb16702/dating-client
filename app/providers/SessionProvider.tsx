@@ -1,6 +1,5 @@
 "use client";
 import { ReactNode, useEffect, useState } from "react";
-import { io } from "socket.io-client";
 import { useSessionStore } from "../stores/sessionStore";
 import { useSocketStore } from "../stores/socketStore";
 
@@ -21,21 +20,21 @@ async function fetchUserData(token: string | undefined) {
       },
     });
 
-    if (!response.ok) throw new Error('Failed to fetch user data');
+    if (!response.ok) throw new Error("Failed to fetch user data");
 
     const { data } = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching user data:', error);
+    console.error("Error fetching user data:", error);
     return null;
   }
 }
 
 export default function SessionProvider({ children, token, user_id }: SessionProviderProps) {
   const { setSession, currentSession } = useSessionStore();
-  const { socket, connect, disconnect } = useSocketStore();
+  const { connect, disconnect } = useSocketStore();
 
-  console.log(user_id)
+  console.log(user_id);
 
   useEffect(() => {
     if (!currentSession && token) {
@@ -56,5 +55,5 @@ export default function SessionProvider({ children, token, user_id }: SessionPro
     };
   }, []);
 
-  return <div>{children}</div>;
+  return children;
 }

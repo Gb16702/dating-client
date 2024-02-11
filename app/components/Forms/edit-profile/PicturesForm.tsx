@@ -10,6 +10,8 @@ import Cross from "../../Icons/Cross";
 import Picture from "../../Icons/Picture";
 import Toast from "../../UI/Toast";
 import { useRouter } from "next/navigation";
+import Loader from "../../Icons/Loader";
+import Image from "next/image";
 
 export default function PicturesForm({ pictures }: { pictures: any }) {
   const { setSession, currentSession } = useSessionStore();
@@ -31,6 +33,13 @@ export default function PicturesForm({ pictures }: { pictures: any }) {
   const [imagesToDelete, setImagesToDelete] = useState<string[]>([]);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [disabled, setDisabled] = useState(true);
+  const [firstRender, setFirstRender] = useState(true);
+
+  useEffect(() => {
+    const hasInitialLengthChanged = imageFiles.length > 0 || imagesToDelete.length > 0;
+    setDisabled(!hasInitialLengthChanged || loading);
+  }, [imageFiles, imagesToDelete, loading]);
 
   const fileInputRefs: MutableRefObject<HTMLInputElement[]> = useRef<HTMLInputElement[]>([]);
 
@@ -50,6 +59,7 @@ export default function PicturesForm({ pictures }: { pictures: any }) {
     });
 
     setImagePreviews(newImagePreviews);
+    setFirstRender(false);
   }, [pictures]);
 
   const handleImageChange = useCallback(
@@ -119,7 +129,11 @@ export default function PicturesForm({ pictures }: { pictures: any }) {
   const zoomModal: ReactPortal | null = zoomedImage
     ? createPortal(
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-3 z-50" onClick={handleCloseZoom}>
-          <img src={zoomedImage} alt="Zoomed" className="w-[60%] h-[60%] rounded-[16px] object-cover max-sm:w-[100%] max-sm:h-[50%]" />
+          <img
+            src={zoomedImage}
+            alt="Zoomed"
+            className="w-[60%] h-[60%] rounded-[16px] object-cover max-sm:w-[94%] max-sm:h-[40%] max-w-[420px] max-h-[420px]"
+          />
         </div>,
         document.body
       )
@@ -131,13 +145,13 @@ export default function PicturesForm({ pictures }: { pictures: any }) {
   };
 
   const onSubmit = async (data: any) => {
+    setLoading(true);
     const formData = new FormData();
-    console.log(imagesToDelete);
 
     imageFiles.forEach((file: File, index) => {
       if (file instanceof File) {
-        formData.append(`files`, file); // Tous les fichiers dans la même clé
-        formData.append(`roles`, index === 0 ? "main" : "secondary"); // Les rôles correspondants dans une autre clé
+        formData.append(`files`, file);
+        formData.append(`roles`, index === 0 ? "main" : "secondary");
       }
     });
 
@@ -154,8 +168,9 @@ export default function PicturesForm({ pictures }: { pictures: any }) {
     });
 
     const dataFromResponse = await response.json();
+    toast.custom(t => <Toast type={response.ok ? "Succès" : "Erreur"} message={dataFromResponse.message} t={t} />);
+    setLoading(false);
     if (response.ok) {
-      toast.custom(t => <Toast type="Succès" message={dataFromResponse.message} t={t} />);
       const updatedProfilePicture = dataFromResponse.profile_picture
         ? { ...currentSession?.profile, profile_picture: dataFromResponse.profile_picture }
         : currentSession?.profile;
@@ -164,14 +179,14 @@ export default function PicturesForm({ pictures }: { pictures: any }) {
         ? dataFromResponse.secondary_pictures.map((pic: string) => ({ picture_url: pic }))
         : currentSession?.user_secondary_profile_pictures;
 
-        setSession({
-          ...currentSession,
+      setSession({
+        ...currentSession,
         // @ts-ignore
         profile: updatedProfilePicture,
         user_secondary_profile_pictures: updatedSecondaryPictures,
       });
 
-      router.refresh()
+      router.refresh();
     } else {
       console.error(dataFromResponse.message);
     }
@@ -180,45 +195,57 @@ export default function PicturesForm({ pictures }: { pictures: any }) {
   return (
     <>
       {zoomModal}
-      <form id="form" className="bg-white flex flex-grow min-h-full px-2 gap-x-2" onSubmit={handleSubmit(onSubmit)}>
-        {imagePreviews.map((preview: string, index: number) => (
-          <div
-            key={index}
-            className="border border-whitish_border rounded-[12px] flex items-center justify-center cursor-pointer w-[95px] h-[95px] max-sm:w-[80px] max-sm:h-[80px] overflow-hidden bg-whitish_background"
-            onClick={triggerFileInputClick(index)}>
-            {preview ? (
-              <div className="relative w-full h-full" onClick={e => handleZoom(e, preview)}>
-                <img src={preview} alt={`Aperçu ${index}`} className="w-full h-full object-cover" />
-                {index === 0 && (
-                  <div className="absolute bottom-[6px] left-1 w-fit px-2 h-[17px] rounded-full bg-white/[.4] flex items-center justify-center">
-                    <p className="text-[10px] font-semibold text-white">Principale</p>
+      <form id="form" className="flex min-h-full gap-x-2 flex-col" onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex flex-row flex-grow gap-x-2 ">
+          {imagePreviews.map((preview: string, index: number) => (
+            <div
+              key={index}
+              className={`border border-whitish_border rounded-[12px] flex items-center justify-center cursor-pointer w-[95px] h-[95px] max-sm:w-[80px] max-sm:h-[80px] overflow-hidden`}
+              onClick={triggerFileInputClick(index)}>
+              {preview ? (
+                <div className="relative w-full h-full" onClick={e => handleZoom(e, preview)}>
+                  <Image height={100} width={100} src={preview} alt={`Aperçu ${index}`} className="w-full h-full object-cover" />
+                  {index === 0 && (
+                    <div className="absolute bottom-[6px] left-1 w-fit px-2 h-[17px] rounded-full bg-white/[.4] flex items-center justify-center">
+                      <p className="text-[10px] font-semibold text-white">Principale</p>
+                    </div>
+                  )}
+                  <div>
+                    <button
+                      type="reset"
+                      className="absolute right-[3px] top-[3px] p-[2.5px] w-fit bg-white/[.4] rounded-full"
+                      onClick={e => handleDelete(e, index)}>
+                      <Cross classes={"w-4 h-4 text-white"} border={3} />
+                    </button>
                   </div>
-                )}
-                <div>
-                  <button
-                    type="reset"
-                    className="absolute right-[3px] top-[3px] p-[2.5px] w-fit bg-white/[.4] rounded-full"
-                    onClick={e => handleDelete(e, index)}>
-                    <Cross classes={"w-4 h-4 text-white"} border={3} />
-                  </button>
                 </div>
-              </div>
-            ) : (
-              <Picture classes={"w-[22px] h-[22px] fill-gray_border"} />
-            )}
-            <input
-              type="file"
-              accept="image/*"
-              style={{ display: "none" }}
-              ref={el => (fileInputRefs.current[index] = el!)}
-              onChange={e => handleImageChange(index, e)}
-            />
-          </div>
-        ))}
+              ) : firstRender ? (
+                <Loader stroke="#C9C9C9" />
+              ) : (
+                <Picture classes={"w-[22px] h-[22px] fill-gray_border"} />
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                ref={el => (fileInputRefs.current[index] = el!)}
+                onChange={e => handleImageChange(index, e)}
+              />
+            </div>
+          ))}
+        </div>
+        <div className="h-[calc(100vh/100*8)] w-full flex items-center">
+          <button
+            type="submit"
+            form="form"
+            disabled={disabled}
+            className={`bg-black px-4 py-3 min-w-[100px] rounded-[9px] text-white font-semibold text-sm flex items-center justify-center ${
+              disabled && "opacity-50 cursor-not-allowed"
+            }`}>
+            {loading ? <Loader /> : "Enregistrer"}
+          </button>
+        </div>
       </form>
-      <button type="submit" form="form">
-        Envoyer
-      </button>
     </>
   );
 }
