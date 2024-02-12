@@ -6,6 +6,7 @@ import { ChangeEvent, MutableRefObject, ReactPortal, useCallback, useEffect, use
 import Polygon from "../../UI/Modal/Polygon";
 import Muscial from "../../Icons/Musical";
 import { stopPlayingTrack } from "../../UI/Searchbar";
+import Image from "next/image";
 
 type TracksProps = {
   sessionId: string | undefined;
@@ -146,7 +147,7 @@ export default function Tracks({ sessionId, setAchieved, onTrackChange, initialT
           {selectedTracks.map((track, index) => (
             <div key={track.id} className="flex flex-row gap-x-2 py-2 rounded-[12px]">
               <input {...register(`selectedTracks[${index}]`)} type="hidden" value={track} />
-              <img src={track.image} alt={track.title} className="w-[70px] h-[70px] rounded-[7px]" />
+              <Image src={track.image} alt={track.title} width={70} height={70} className="w-[70px] h-[70px] rounded-[7px]" />
               <div className={`flex flex-col justify-between`}>
                 <div>
                   <h2 className="font-semibold">{track.title.length > 30 ? `${track.title.slice(0, 40)}...` : track.title}</h2>

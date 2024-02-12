@@ -7,40 +7,17 @@ import type { ConversationsSidebarProps } from "../ConversationsSidebar";
 import Image from "next/image";
 import Link from "next/link";
 import Cross from "../../Icons/Cross";
+import { transformDate } from "@/app/utils/transformDate";
+import { useMessageStore } from "@/app/stores/messageStore";
 
 export default function ConversationsNavigation({ conversations, uid }: ConversationsSidebarProps): JSX.Element {
   const [active, setActive] = useState("tout");
   const [search, setSearch] = useState("");
   const [filteredConversations, setFilteredConversations] = useState(conversations);
 
-  function transformDateToTimeDifferenceFromNow(date: string) {
-    const now = new Date();
-    const then = new Date(date);
-    const diff = now.getTime() - then.getTime();
-    const seconds = Math.floor(diff / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-    const weeks = Math.floor(days / 7);
-    const months = Math.floor(weeks / 4);
-    const years = Math.floor(months / 12);
+  const { messages } = useMessageStore();
 
-    if (years > 0) {
-      return years + " ans";
-    } else if (months > 0) {
-      return months + " mois";
-    } else if (weeks > 0) {
-      return weeks + " semaines";
-    } else if (days > 0) {
-      return days + " jours";
-    } else if (hours > 0) {
-      return hours + " heures";
-    } else if (minutes > 0) {
-      return minutes + " minutes";
-    } else if (seconds > 0) {
-      return seconds + " secondes";
-    }
-  }
+  const transformDateToTimeDifferenceFromNow = useCallback((date: string) => transformDate(date), []);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setSearch(e.target.value);
@@ -62,7 +39,14 @@ export default function ConversationsNavigation({ conversations, uid }: Conversa
     }
 
     setFilteredConversations(tempConversations);
+
+    return () => {
+      tempConversations = [];
+    };
   }, [active, search, conversations]);
+
+
+  const lastMessage = messages && messages[messages.length - 1]?.content;
 
   return (
     <>
@@ -80,12 +64,17 @@ export default function ConversationsNavigation({ conversations, uid }: Conversa
           </button>
         </div>
         <div className="px-6 flex items-center w-full">
-          <InputGroup additionalClasses="flex-grow outline-none" focusColor="transparent">
+          <InputGroup
+            additionalClasses={`flex-grow outline-none ${conversations.length === 0 ? " bg-whitish_background outline-transparent" : "cursor-text"}`}
+            focusColor="transparent">
             <input
               onChange={e => handleChange(e)}
               type="text"
               placeholder="Rechercher..."
-              className="w-full h-full px-2 text-sm bg-transparent outline-none"
+              className={`w-full h-full px-2 text-sm bg-transparent outline-none ${
+                conversations.length === 0 ? "cursor-not-allowed" : "cursor-text"
+              }`}
+              disabled={conversations.length === 0}
               value={search}
             />
             {search.trim().length > 0 && (
@@ -129,7 +118,7 @@ export default function ConversationsNavigation({ conversations, uid }: Conversa
                   <div className="flex justify-between w-full">
                     <h1 className="font-semibold text-sm">{c.profile.first_name}</h1>
                     <p className="text-xs tracking-tight  text-subtitle_foreground">
-                      {`Il y a ${
+                      {`${
                         c.lastMessage
                           ? transformDateToTimeDifferenceFromNow(c.lastMessage.created_at)
                           : transformDateToTimeDifferenceFromNow(c.created_at)
@@ -147,11 +136,7 @@ export default function ConversationsNavigation({ conversations, uid }: Conversa
                             : "text-black"
                           : "text-black"
                       }`}>
-                      {c.lastMessage
-                        ? c.lastMessage.content.length > 35
-                          ? c.lastMessage.content.substr(0, 35) + "..."
-                          : c.lastMessage.content
-                        : `Aucun message`}
+                      {lastMessage ? lastMessage : c.lastMessage ? c.lastMessage.content : "Aucun message"}
                     </p>
                   </div>
                 </div>

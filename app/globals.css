@@ -89,6 +89,10 @@ input[type="number"] {
   background: #ddd;
 }
 
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 .icon_bars {
   display: flex;
   align-items: flex-end;

@@ -26,8 +26,6 @@ export default function Sidebar() {
         setLoading(false);
       }, 0);
 
-      console.log(currentSession, "curr");
-
       return () => clearTimeout(timer);
     }
   }, [currentSession]);
@@ -55,10 +53,9 @@ export default function Sidebar() {
                   </div>
                   <div className="h-full flex items-center justify-center"></div>
                   <div className="flex items-center justify-center">
-                    <Cross
-                      classes={"w-4 h-4 cursor-pointer"}
-                      onClick={() => setOpen(false)}
-                    />
+                    <button onClick={() => setOpen(false)} className="border p-1 rounded-[6px]">
+                      <Cross classes="w-4 h-4 text-subtitle_foreground" />
+                    </button>
                   </div>
                 </div>
                 <div className="flex justify-center items-center flex-grow py-4 px-4">
@@ -81,11 +78,7 @@ export default function Sidebar() {
                   <div className="flex flex-col items-start justify-center text-[14px]">
                     <h2 className="font-semibold">{properties.username}</h2>
                     <h3 className="text-[12px] text-subtitle_foreground">
-                      {typeof Object.values(properties).map(
-                        (value) => value != undefined
-                      ) && properties.is_admin
-                        ? "Administrateur"
-                        : "Utilisateur"}
+                      {typeof Object.values(properties).map(value => value != undefined) && properties.is_admin ? "Administrateur" : "Utilisateur"}
                     </h3>
                   </div>
                 </div>

@@ -18,26 +18,30 @@ type NavigationProps = {
 export default function Navigation({ isAdmin, id }: NavigationProps): JSX.Element {
   const pathname = usePathname();
 
+  function getIconClass(path: string, isActive: boolean) {
+    return `w-4 h-4 fill-none w-6 h-6 ${isActive ? "stroke-accent" : "stroke-black"}`;
+  }
+
   const navigationItems: NavigationItems[] = [
     {
       name: "Découvrir",
-      icon: <Icons.Home classes={`w-4 h-4 fill-none w-6 h-6 ${pathname === "/" ? "stroke-accent" : "stroke-black"}`} />,
+      icon: <Icons.Home classes={getIconClass("/", pathname === "/")} />,
       href: "/",
     },
     {
       name: "Conversations",
-      icon: <Icons.Chat classes={`w-4 h-4 fill-none w-6 h-6 ${pathname === `/${id}/conversations` ? "stroke-accent" : "stroke-black"}`} />,
+      icon: <Icons.Chat classes={getIconClass(`/${id}/conversations`, pathname.startsWith(`/${id}/conversations`))} />,
       href: `/${id}/conversations`,
     },
     {
       name: "Profil",
-      icon: <Icons.Settings classes={`w-4 h-4 fill-none w-6 h-6 ${pathname === `/${id}/profil` ? "stroke-accent" : "stroke-black"}`} />,
+      icon: <Icons.Settings classes={getIconClass(`/${id}/profil`, pathname.startsWith(`/${id}/profil`))} />,
       href: `/${id}/profil`,
     },
     {
       name: "Notre Application",
       icon: <Icons.Phone classes={`w-4 h-4 fill-none w-6 h-6 ${pathname === "/d" ? "stroke-accent" : "stroke-black"}`} />,
-      href: "/e",
+      href: "/eaza",
     },
   ].filter(Boolean);
 
@@ -50,7 +54,10 @@ export default function Navigation({ isAdmin, id }: NavigationProps): JSX.Elemen
   }
 
   function activeLink(href: string) {
-    return pathname === href;
+    if (href === "/") {
+      return pathname === href;
+    }
+    return pathname.startsWith(href);
   }
 
   return (

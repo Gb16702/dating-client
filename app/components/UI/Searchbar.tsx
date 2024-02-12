@@ -6,6 +6,7 @@ import { Arrow, Select } from "../Icons/keyboard/Interactions";
 import Dv from "./Skeletons/Dv";
 import Chevron from "../Icons/Chevron";
 import Listening from "../Icons/Listening";
+import Image from "next/image";
 
 type SearchbarProps = {
   onSearch: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -114,12 +115,12 @@ export default function Searchbar({
                   <div className="relative min-w-[70px] min-h-[70px]">
                     {playingTrack === id ? (
                       <div className="w-full h-full rounded-[7px] flex items-center justify-center overflow-hidden">
-                        <img src={image} alt={title} className="w-[70px] h-[70px] rounded-[7px]" />
+                        <Image src={image} alt={title} width={70} height={70} className="w-[70px] h-[70px] rounded-[7px]" />
                         <div className="absolute z-[5] bg-white/[.15] backdrop-blur-[2px] w-full h-full rounded-[7px]"></div>
                         <Listening />
                       </div>
                     ) : (
-                      <img src={image} alt={title} className="w-[70px] h-[70px] rounded-[7px]" />
+                      <Image src={image} alt={title} className="w-[70px] h-[70px] rounded-[7px]" />
                     )}
                   </div>
                   <div className={`flex flex-col justify-between`}>

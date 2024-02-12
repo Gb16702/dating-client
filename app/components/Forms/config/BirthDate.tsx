@@ -26,6 +26,7 @@ export default function BirthDate({ onNextStep, onBirthDateChange, initialBirthD
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<BirthDateFormInputs>({
     resolver: zodResolver(birthDateResolver),
@@ -35,6 +36,13 @@ export default function BirthDate({ onNextStep, onBirthDateChange, initialBirthD
       year: initialBirthDate.year,
     },
   });
+
+  const handleInputChange = (e: any) => {
+    const { name, value } = e.target;
+    const maxLength = name === 'year' ? 4 : 2;
+    const trimmedValue = value.slice(0, maxLength);
+    setValue(name, trimmedValue);
+  };
 
   useEffect(() => {
     reset({
@@ -60,7 +68,7 @@ export default function BirthDate({ onNextStep, onBirthDateChange, initialBirthD
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-row w-[400px] max-sm:w-full flex-1 pt-[20px] gap-x-3">
+        <div className="flex flex-row w-[400px] ma  x-sm:w-full flex-1 pt-[20px] gap-x-3">
           <div>
             <Label name="Jour" id="day" />
             <div className="rounded-md outline outline-1 outline-gray_border h-[35px]">
@@ -70,7 +78,7 @@ export default function BirthDate({ onNextStep, onBirthDateChange, initialBirthD
                 maxLength={2}
                 placeholder="JJ"
                 className="outline-none text-center text-base text-black placeholder-gray_border w-[60px] max-sm:w-[100%] h-full"
-                {...register("day")}
+                {...register("day", { onChange: handleInputChange })}
               />
             </div>
           </div>
@@ -82,7 +90,7 @@ export default function BirthDate({ onNextStep, onBirthDateChange, initialBirthD
                 aria-label="Mois"
                 placeholder="MM"
                 className="outline-none text-center text-base text-black placeholder-gray_border w-[60px] max-sm:w-[100%] h-full"
-                {...register("month")}
+                {...register("month",  { onChange: handleInputChange })}
               />
             </div>
           </div>
@@ -94,7 +102,7 @@ export default function BirthDate({ onNextStep, onBirthDateChange, initialBirthD
                 aria-label="Année"
                 placeholder="AAAA"
                 className="outline-none text-center text-base text-black placeholder-gray_border w-[80px] max-sm:w-[100%] h-full"
-                {...register("year")}
+                {...register("year",  { onChange: handleInputChange })}
               />
             </div>
           </div>

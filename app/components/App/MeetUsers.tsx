@@ -13,6 +13,7 @@ import { createPortal } from "react-dom";
 import MeetUsersReportForm from "../Forms/MeetUsersReportForm";
 import Report from "../Icons/Report";
 import Flip from "../Icons/Flip";
+import { useSwipeable } from "react-swipeable";
 
 type MeetUsersProps = {
   token: string | undefined;
@@ -63,8 +64,11 @@ export default function MeetUsers({ token }: MeetUsersProps): JSX.Element {
   const [flipped, setFlipped] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [message, setMessage] = useState(null);
+  const [swipeDirection, setSwipeDirection] = useState(0);
+  const [cardStyle, setCardStyle] = useState({} as any);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const swipeRef = useRef();
 
   const currentUserTracks = iterableUsers[index]?.tracksData || [];
 
@@ -168,6 +172,43 @@ export default function MeetUsers({ token }: MeetUsersProps): JSX.Element {
       )
     : null;
 
+  const handlers = useSwipeable({
+    onSwiping: e => {
+      setSwipeDirection(e.dir === "Right" ? swipeDirection + 1 : e.dir === "Left" && ((swipeDirection - 1) as any));
+      if (swipeRef.current) {
+        cancelAnimationFrame(swipeRef.current);
+      }
+
+      const updateSwipe = () => {
+        setCardStyle({
+          transform: `translateX(${e.deltaX}px)`,
+          background: `${swipeDirection > 20 && `rgba(17, 12, 254, ${Math.abs(e.deltaX) / 500})`}`,
+          opacity: `${swipeDirection < -5 && 1 - Math.abs(e.deltaX) / 200}`,
+          color: `${swipeDirection > 20 && `rgba(255, 255, 255, ${Math.abs(e.deltaX)})`}`,
+        });
+      };
+
+      swipeRef.current = requestAnimationFrame(updateSwipe) as any;
+    },
+    onSwiped: e => {
+      if (swipeRef.current) {
+        cancelAnimationFrame(swipeRef.current);
+      }
+      if (Math.abs(e.deltaX) > 250) {
+        const action = e.dir === "Right" ? "like" : e.dir === "Left" && ("swipe" as any);
+        handleUserAction(action);
+      }
+
+      setCardStyle({
+        transform: `translateX(0px)`,
+        background: "white",
+      });
+
+      setSwipeDirection(0);
+    },
+    preventScrollOnSwipe: true,
+  });
+
   return (
     <>
       {modal}
@@ -182,8 +223,8 @@ export default function MeetUsers({ token }: MeetUsersProps): JSX.Element {
         </>
       ) : iterableUsers.length > 0 ? (
         <>
-          <div className="flex flex-col gap-y-2 max-md:w-full items-center">
-            <div className="flex flex-row justify-center items-center gap-x-2 w-full">
+          <div {...handlers} className="flex flex-col gap-y-2 max-md:w-full items-center">
+            <div className="flex flex-row justify-center items-center gap-x-2 w-full relative">
               <div className="md:hidden fixed bottom-[12px] left-0 w-[97%] translate-x-[1.5%] bg-white border border-whitish_border rounded-[9px]">
                 <div className="relative w-full flex flex-row justify-between overflow-hidden">
                   <div className="px-2 absolute bottom-0 w-full">
@@ -286,7 +327,7 @@ export default function MeetUsers({ token }: MeetUsersProps): JSX.Element {
                   )}
                 </div>
               </Card>
-              <Card loading={false}>
+              <Card loading={false} additionalClasses={cardStyle}>
                 <div className=" w-full h-full flex flex-col gap-y-2 relative">
                   <>
                     {flipped ? (
@@ -347,7 +388,7 @@ export default function MeetUsers({ token }: MeetUsersProps): JSX.Element {
                           <button
                             onClick={() => setFlipped(true)}
                             className="transition-colors duration-200 font-semibold flex items-center justify-center relative bottom-3">
-                            <Flip classes="stroke-accent_blue w-[20px] h-[20px]" strokeWidth={2.5} />
+                            <Flip classes={`${swipeDirection > 20 ? "stroke-white" : "stroke-accent_blue "} w-[20px] h-[20px]`} strokeWidth={2.5} />
                           </button>
                         </div>
                       </>

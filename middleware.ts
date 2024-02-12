@@ -1,100 +1,93 @@
-import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
 
-const SERVER_ENDPOINT = process.env.NEXT_PUBLIC_SERVER;
-const CLIENT_ENDPOINT = process.env.NEXT_PUBLIC_CLIENT;
+const SERVER_ENDPOINT = process.env.NEXT_PUBLIC_SERVER as string;
+const CLIENT_ENDPOINT = process.env.NEXT_PUBLIC_CLIENT as string;
 
-const protectedRoutes = {
-  admin: ["/admin"],
-  authenticated: ["/", "/profile", "/dashboard"],
-  unauthenticated: ["/authentification"],
-};
+const ADMIN_ROUTE = "/admin";
+const UNAUTHENTICATED_ROUTE = "/authentification";
 
-async function decodeToken({ value: token }: { value: string }) {
+function redirectToLogin(clientEndpoint: string): NextResponse {
+  return NextResponse.redirect(new URL(`${UNAUTHENTICATED_ROUTE}/connexion`, clientEndpoint));
+}
+
+function redirectToProfileConfiguration(userId: string, clientEndpoint: string): NextResponse {
+  return NextResponse.redirect(new URL(`${userId}/profil/configuration`, clientEndpoint));
+}
+
+function redirectToHome(clientEndpoint: string): NextResponse {
+  return NextResponse.redirect(new URL("/", clientEndpoint));
+}
+
+interface Data {
+  user: {
+    id: string;
+    is_profile_complete: boolean;
+    is_admin: boolean;
+  },
+  error: string
+}
+
+async function validateUser(token: string): Promise<Data | null> {
   try {
-    console.log(token);
-
-    const response = await fetch(`${SERVER_ENDPOINT}api/authentication/verify-session-token`, {
+    const response = await fetch(`${SERVER_ENDPOINT}api/users/me`, {
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
-    if (response.ok) {
-      const data = await response.json();
-      console.log("OK");
 
-      return data;
-    }
-  } catch (e) {
-    console.error(e);
+    return await response.json()
+  } catch (error) {
+    console.error("Error validating user:", error);
     return null;
   }
 }
 
-export async function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname.includes(".") || request.nextUrl.pathname.startsWith("/api/")) {
+export async function middleware(request: NextRequest): Promise<NextResponse> {
+  if (
+    request.nextUrl.pathname.includes(".") ||
+    request.nextUrl.pathname.startsWith("/api/")
+  ) {
     return NextResponse.next();
   }
 
-  // // Get the token from the request cookies
-  // const token = cookies().get("token");
+  const token = cookies().get("token");
+  const isAuthPage = request.nextUrl.pathname.startsWith(UNAUTHENTICATED_ROUTE);
+  const isAdminRoute = request.nextUrl.pathname.startsWith(ADMIN_ROUTE);
 
-  // // Handle unauthenticated and authenticated users
-  // if (token) {
-  //   const userData = await decodeToken(token);
-  //   console.log(userData);
+  if (!token && !isAuthPage) {
+    return redirectToLogin(CLIENT_ENDPOINT);
+  }
 
-  //   const user = userData?.user;
+  if (token) {
+    const { data: user } = await validateUser(token.value) as any;
 
-  //   if (!user) {
-  //     // Redirect unauthenticated user to login page
-  //     return NextResponse.redirect(new URL("/authentification/connexion", CLIENT_ENDPOINT));
-  //   }
+    if (user) {
+      if (user.error && !isAuthPage) {
+        return redirectToLogin(CLIENT_ENDPOINT);
+      }
 
-  //   // Handle special case for setting the session cookie
-  //   if (request.nextUrl.pathname === "/authentification/temp") {
-  //     const sessionID = request.nextUrl.searchParams.get("sessionId");
-  //     if (sessionID) {
-  //       const response = NextResponse.redirect(new URL("/", CLIENT_ENDPOINT));
-  //       response.cookies.set("token", sessionID, { path: "/" });
-  //       return response;
-  //     }
-  //   }
+      if (user && isAuthPage) {
+        return redirectToHome(CLIENT_ENDPOINT);
+      }
 
-  //   if (user.is_admin) {
-  //     // Allow admin to proceed
-  //     return NextResponse.next();
-  //   }
+      const isSetupProfilePage = request.nextUrl.pathname.startsWith(
+        `/${user.id}/profil/configuration`
+      );
 
-  //   // Redirect non-admin trying to access admin-only page
-  //   if (request.nextUrl.pathname.startsWith(protectedRoutes.admin[0])) {
-  //     return NextResponse.redirect(new URL("/", CLIENT_ENDPOINT));
-  //   }
+      if (!user.is_profile_complete && !isSetupProfilePage) {
+        return redirectToProfileConfiguration(user.id, CLIENT_ENDPOINT);
+      } else if (user.is_profile_complete && isSetupProfilePage) {
+        return redirectToHome(CLIENT_ENDPOINT);
+      }
 
-  //   // Redirect to profile configuration if profile is not complete
-  //   if (!user.is_profile_complete && !request.nextUrl.pathname.startsWith("/profil/configuration")) {
-  //     return NextResponse.redirect(new URL("/profil/configuration", CLIENT_ENDPOINT));
-  //   }
-
-  //   // Allow access to profile configuration if profile is not complete
-  //   if (!user.is_profile_complete && request.nextUrl.pathname.startsWith("/profil/configuration")) {
-  //     return NextResponse.next();
-  //   }
-
-  //   // Redirect away from profile configuration if profile is complete
-  //   if (user.is_profile_complete && request.nextUrl.pathname.startsWith("/profil/configuration")) {
-  //     return NextResponse.redirect(new URL("/", CLIENT_ENDPOINT));
-  //   }
-  // } else {
-  //   // Redirect to login if trying to access protected routes while unauthenticated
-  //   if (!protectedRoutes.unauthenticated.some(path => request.nextUrl.pathname.startsWith(path))) {
-  //     return NextResponse.redirect(new URL("/authentification/connexion", CLIENT_ENDPOINT));
-  //   }
-  // }
-
+      if (isAdminRoute && !user.is_admin) {
+        return redirectToHome(CLIENT_ENDPOINT);
+      }
+    } else if (!isAuthPage) {
+      return redirectToLogin(CLIENT_ENDPOINT);
+    }
+  }
   return NextResponse.next();
 }
-
-// export const config = {
-//   matcher: [...protectedRoutes.authenticated, ...protectedRoutes.admin, "/authentification/temp"],
-// };

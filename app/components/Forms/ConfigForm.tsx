@@ -16,6 +16,8 @@ import Cities from "./config/Cities";
 import { CheckState } from "../UI/Select";
 import AdditionalInformations, { InterestType } from "./config/AdditionalInformations";
 import Tracks from "./config/Tracks";
+import toast from "react-hot-toast";
+import Toast from "../UI/Toast";
 
 type ConfigFormProps = {
   step: Step;
@@ -112,11 +114,13 @@ export default function ConfigForm({ step, onNextStep, data, sessionId }: Config
         body: formData,
       });
 
-      const result = await response.json();
+      const { message }: { message: string } = await response.json();
       setAchieved(false);
+      toast.custom((t) => <Toast type={response.ok ? "Succès" : "Erreur"} message={message} t={t} />);
     } catch (error) {
       console.error("Erreur lors de l'envoi des données :", error);
       setAchieved(false);
+      toast.custom((t) => <Toast type="Erreur" message="Erreur lors de l'envoi des données" t={t} />);
     }
   }
 

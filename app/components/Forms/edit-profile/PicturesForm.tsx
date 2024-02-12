@@ -129,9 +129,11 @@ export default function PicturesForm({ pictures }: { pictures: any }) {
   const zoomModal: ReactPortal | null = zoomedImage
     ? createPortal(
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-3 z-50" onClick={handleCloseZoom}>
-          <img
+          <Image
             src={zoomedImage}
             alt="Zoomed"
+            width={100}
+            height={100}
             className="w-[60%] h-[60%] rounded-[16px] object-cover max-sm:w-[94%] max-sm:h-[40%] max-w-[420px] max-h-[420px]"
           />
         </div>,
