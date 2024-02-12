@@ -1,19 +1,17 @@
 import Link from "next/link";
 import React, { memo } from "react";
-import type { PropsWithChildren } from "react";
 
-interface NavItemProps extends PropsWithChildren {
+interface NavItemProps extends React.PropsWithChildren {
   href: string;
   text: string;
   icon?: JSX.Element;
 }
 
 const navItems = [
-  { href: "/dashboard", text: "Dashboard" },
   { href: "/admin/users", text: "Users" },
   { href: "/admin/interests", text: "Hobbies" },
   { href: "/admin/reports", text: "Reports" },
-  // { href: "/admin/support", text: "Support" }
+  { href: "/admin/cities", text: "Cities" },
 ];
 
 const NavItem = ({ href, icon, text }: NavItemProps) => (
@@ -48,5 +46,4 @@ const Aside = memo(() => {
 });
 
 Aside.displayName = 'Aside';
-
 export default Aside;

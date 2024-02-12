@@ -1,7 +1,7 @@
 import { DataTablePagination } from '@/app/components/admin/Pagination';
 import Table from '@/app/components/admin/Table';
-import Link from 'next/link';
 import { columns } from './ColumnDef';
+import Search from '@/app/components/admin/Search';
 
 export default async function Hobbies({ searchParams }: { searchParams: { search?: string; page?: string } }) {
 
@@ -21,8 +21,11 @@ export default async function Hobbies({ searchParams }: { searchParams: { search
             <div className='flex justify-between'>
                 <h1 className='text-3xl'>Supports</h1>
             </div>
-            <Table columns={columns} tableData={tickets.data} initialSearch={search} />
-            {/* <DataTablePagination totalPages={tickets.meta.last_page} initialPage={page} /> */}
+            <div className='flex justify-between py-4'>
+                <Search initialSearch={search} />
+            </div>
+            <Table columns={columns} tableData={tickets.data} />
+            <DataTablePagination totalPages={tickets.meta.last_page} initialPage={page} />
         </div>
     );
 }

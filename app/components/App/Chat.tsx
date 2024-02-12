@@ -7,7 +7,7 @@ import Send from "../Icons/Send";
 import { getCookie } from "cookies-next";
 import Image from "next/image";
 
-export default function Chat({ conversation_id, token, conversation, otherUser }: any) {
+export default function Chat({ conversation_id, token, conversation, otherUser}: any) {
   const [inputValue, setInputValue] = useState("");
   const { socket } = useSocketStore();
   const { messages, initialize, addMessage } = useMessageStore();
@@ -17,6 +17,8 @@ export default function Chat({ conversation_id, token, conversation, otherUser }
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  console.log(otherUser);
 
   if (conversation.length > 0 && messages.length <= 0) {
     initialize(
@@ -127,17 +129,20 @@ export default function Chat({ conversation_id, token, conversation, otherUser }
         <div className="flex-grow h-[50px] flex gap-x-4">
           <input
             type="text"
-            placeholder="Votre message..."
+            placeholder={otherUser.areUsersMatching ? "Votre message..." : "Vous ne pouvez plus répondre à cette conversation"}
             onChange={e => setInputValue(e.target.value)}
             value={inputValue}
-            className="h-full flex flex-grow px-2 text-sm bg-transparent border border-whitish_border rounded-[8px] outline-none"
+            className={`h-full flex flex-grow px-2 text-sm rounded-[8px] outline-none ${!otherUser.areUsersMatching ? "bg-whitish_background cursor-not-allowed" : "bg-transparent border border-whitish_border"}`}
+            disabled={!otherUser.areUsersMatching}
             onKeyDown={handleKeyDown}
           />
-          <button
-            onClick={handlePrivateMessage}
-            className="h-full w-[50px] rounded-[8px] border border-whitish_border flex items-center justify-center">
-            <Send classes="fill-black w-5 h-5 relative right-[2px] top-[2px]" strokeWidth={6} />
-          </button>
+          {otherUser.areUsersMatching && (
+              <button
+                  onClick={handlePrivateMessage}
+                  className="h-full w-[50px] rounded-[8px] border border-whitish_border flex items-center justify-center">
+                <Send classes="fill-black w-5 h-5 relative right-[2px] top-[2px]" strokeWidth={6} />
+              </button>
+          )}
         </div>
       </section>
     </>

@@ -1,5 +1,11 @@
 import Aside from "@/app/components/admin/Aside";
 import NavBar from "@/app/components/admin/NavBar";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Admin",
+  description: "Admin",
+};
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
