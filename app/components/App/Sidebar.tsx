@@ -10,6 +10,11 @@ import Background from "../UI/Modal/Background";
 import Thumbnail from "../UI/Thumbnail";
 import Navigation from "./Navigation/Navigation";
 import Logo from "@/app/components/UI/Logo";
+import * as Icons from "@/app/components/Icons/Sidebar/App/AppIcons";
+import {Disconnect} from "@/app/components/Icons/Sidebar/App/AppIcons";
+import {deleteCookie} from "cookies-next";
+import {usePathname, useRouter} from "next/navigation";
+import Link from "next/link";
 
 const montserrat = Montserrat({
     subsets: ["latin"],
@@ -20,6 +25,10 @@ export default function Sidebar({is_admin}: { is_admin: boolean }) {
     const {currentSession} = useSessionStore();
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
+    const pathname = usePathname();
+    const router = useRouter();
+
+    const {removeSession} = useSessionStore();
 
     useEffect(() => {
         if (currentSession) {
@@ -38,6 +47,61 @@ export default function Sidebar({is_admin}: { is_admin: boolean }) {
         username: currentSession?.profile?.first_name,
         avatar: currentSession?.profile?.profile_picture,
     };
+
+
+    async function handleLogout() {
+        deleteCookie("token");
+        deleteCookie("uid");
+        removeSession();
+        router.refresh();
+    }
+
+    function getIconClass(path: string, isActive: boolean) {
+        return `w-4 h-4 fill-none w-6 h-6 ${isActive ? "stroke-accent" : "stroke-black"}`;
+    }
+
+    const navigationItems: NavigationItems[] = [
+        {
+            name: "Découvrir",
+            icon: <Icons.Home classes={getIconClass("/", pathname === "/")}/>,
+            href: "/",
+        },
+        {
+            name: "Conversations",
+            icon: <Icons.Chat
+                classes={getIconClass(`/${properties.id}/conversations`, pathname.startsWith(`/${properties.id}/conversations`))}/>,
+            href: `/${properties.id}/conversations`,
+        },
+        {
+            name: "Profil",
+            icon: <Icons.Settings
+                classes={getIconClass(`/${properties.id}/profil`, pathname.startsWith(`/${properties.id}/profil`))}/>,
+            href: `/${properties.id}/profil`,
+        },
+        {
+            name: "Notre Application",
+            icon: <Icons.Phone
+                classes={`w-4 h-4 fill-none w-6 h-6 ${pathname === "/d" ? "stroke-accent" : "stroke-black"}`}/>,
+            href: "/notre-application",
+        },
+
+    ].filter(Boolean);
+
+    if (properties.is_admin) {
+        navigationItems.push({
+            name: "Administration",
+            icon: <Icons.Administration
+                classes={`w-4 h-4 fill-none w-6 h-6 ${pathname === "/admin" ? "stroke-accent" : "stroke-black"}`}/>,
+            href: "/admin",
+        });
+    }
+
+    function activeLink(href: string) {
+        if (href === "/") {
+            return pathname === href;
+        }
+        return pathname.startsWith(href);
+    }
 
     return (
         <>
@@ -61,7 +125,38 @@ export default function Sidebar({is_admin}: { is_admin: boolean }) {
                                     </div>
                                 </div>
                                 <div className="flex justify-center items-center flex-grow py-4 px-4">
-                                    <Navigation id={currentSession?.id} isAdmin={true}/>
+                                    <header className="w-full h-full">
+                                        <nav className="w-full items-center flex-col h-full">
+                                            <div
+                                                className={"h-full flex flex-col items-center justify-center   gap-y-5 max-md:gap-2"}>
+                                                {navigationItems.map((item, index) => (
+                                                    <Link
+                                                        href={item.href}
+                                                        onClick={() => setOpen(false)}
+                                                        key={index}
+                                                        className={`flex justify-start w-full gap-x-5 h-[42px] items-center px-2 max-md:p-0 rounded-[10px] ${
+                                                            activeLink(item.href) && "bg-accent_blue/[.10] max-md:bg-transparent text-accent_blue"
+                                                        }`}>
+                            <span
+                                className="flex flex-col items-center justify-center gap-y-1 max-md:hidden">{item.icon}</span>
+                                                        <span
+                                                            className="text-[15px] font-medium  max-md:text-sm">{item.name}</span>
+                                                    </Link>
+                                                ))}
+                                                <button
+                                                    className={`flex justify-start w-full gap-x-5 h-[42px] items-center px-2 max-md:p-0 rounded-[10px]`}
+                                                    onClick={handleLogout}
+                                                >
+                            <span
+                                className="flex flex-col items-center justify-center gap-y-1 max-md:hidden"><Disconnect
+                                classes={"w-4 h-4 fill-none w-6 h-6"}/></span>
+                                                    <span
+                                                        className="text-[15px] font-medium  max-md:text-sm">Déconnexion</span>
+                                                </button>
+                                            </div>
+
+                                        </nav>
+                                    </header>
                                 </div>
                             </div>
                         </div>
@@ -102,9 +197,9 @@ export default function Sidebar({is_admin}: { is_admin: boolean }) {
                     <Thumbnail properties={properties} loading={loading}/>
                 </div>
             </section>
-            <section className="md:hidden fixed w-full left-0 top-[12px] h-[70px] flex items-center justify-center">
+            <section className="md:hidden w-full min-h-[70px] flex items-center justify-center">
                 <div
-                    className="h-full w-[97%] bg-white border border-whitish_border rounded-[9px] flex items-center justify-between px-3">
+                    className="h-full w-full bg-white border border-whitish_border rounded-[9px] flex items-center justify-between px-3">
                     <Logo size={"small"}/>
                     <Menu onClick={() => setOpen(true)}/>
                 </div>

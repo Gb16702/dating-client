@@ -199,13 +199,13 @@ export default function MeetUsers({token}: MeetUsersProps): JSX.Element {
                 <div className="px-4 mt-2 py-4 gap-x-2">
                     <button
                         onClick={() => handleUserAction("like", true)}
-                        className="bg-black w-fit max-sm:w-full mt-4 max-sm:mt-6 py-2.5 px-9 rounded-[9px] text-white font-medium text-sm"
+                        className="bg-black w-fit max-md:w-full mt-4 max-md:mt-6 py-2.5 px-9 rounded-[9px] text-white font-medium text-sm"
                     >
                         J'aime
                     </button>
                     <button
                         onClick={() => setWarningModalOpen(false)}
-                        className="bg-black w-fit max-sm:w-full mt-4 max-sm:mt-6 py-2 px-6 rounded-[6px] text-black font-medium text-sm bg-transparent"
+                        className="bg-black w-fit max-md:w-full mt-4 max-md:mt-6 py-2 px-6 rounded-[6px] text-black font-medium text-sm bg-transparent"
                     >
                         Annuler
                     </button>
@@ -269,66 +269,10 @@ export default function MeetUsers({token}: MeetUsersProps): JSX.Element {
                 </>
             ) : iterableUsers.length > 0 ? (
                 <>
-                    <div {...handlers} className="flex flex-col gap-y-2 max-md:w-full items-center">
-                        <div className="flex flex-row justify-center items-center gap-x-2 w-full relative">
-                            <div
-                                className="md:hidden fixed bottom-[12px] left-0 w-[97%] translate-x-[1.5%] bg-white border border-whitish_border rounded-[9px]">
-                                <div className="relative w-full flex flex-row justify-between overflow-hidden">
-                                    <div className="px-2 absolute bottom-0 w-full">
-                                        <div className="h-[2px] bg-accent_blue/[.12]">
-                                            <div
-                                                className={`bg-accent_blue h-[2px] rounded-full absolute w-full bottom-0`}
-                                                style={{width: `${((currentTrackIndex + 1) / 3) * 100}%`}}></div>
-                                        </div>
-                                    </div>
-                                    <div className="w-[50%] flex items-center justify-start px-2 gap-x-2  py-[12px]">
-                                        <Image
-                                            src={currentUserTracks[currentTrackIndex].image}
-                                            alt="profile picture"
-                                            className="rounded-[6px]"
-                                            width={45}
-                                            height={45}
-                                            objectFit="cover"
-                                            priority
-                                        />
-                                        <div className="flex flex-col text-center items-start">
-                                            <h2 className="text-[13px] font-semibold">{currentUserTracks[currentTrackIndex].title}</h2>
-                                            <h3 className="text-[12px] font-regular text-gray_border"
-                                                style={{fontFamily: montserrat.style.fontFamily, fontWeight: 400}}>
-                                                {currentUserTracks[currentTrackIndex].artist}
-                                            </h3>
-                                        </div>
-                                    </div>
-                                    <div className="w-[50%] flex items-center justify-end px-2 gap-x-2  py-[8px]">
-                                        <div className="flex flex-col text-center items-start">
-                                            <div
-                                                className="mt-2 w-full flex justify-center items-center py-2 pr-3 gap-x-6">
-                                                <button onClick={() => handleTrackStatusChange("back")}
-                                                        disabled={currentTrackIndex <= 0}>
-                                                    <Back
-                                                        className={`${currentTrackIndex > 0 ? "fill-accent_blue" : "fill-accent_blue/[.2]"}`}/>
-                                                </button>
-                                                <button
-                                                    onClick={() => handleTrackStatusChange(playing ? "pause" : "play")}>
-                                                    {playing ? (
-                                                        <Pause className={"fill-accent_blue w-[18px] h-[18px]"}/>
-                                                    ) : (
-                                                        <Player className={"fill-accent_blue w-[18px] h-[18px]"}/>
-                                                    )}
-                                                </button>
-                                                <button onClick={() => handleTrackStatusChange("next")}
-                                                        disabled={currentTrackIndex >= currentUserTracks.length - 1}>
-                                                    <Back
-                                                        className={`${
-                                                            currentTrackIndex >= currentUserTracks.length - 1 ? "fill-accent_blue/[.2]" : "fill-accent_blue"
-                                                        } rotate-[180deg]`}
-                                                    />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <div {...handlers} className="flex flex-col gap-y-2 max-md:w-full items-center max-md:h-full">
+                        <div className="md:hidden flex flex-grow flex-1 h-full"></div>
+                        <div
+                            className="flex flex-row max-sm:flex-col  justify-center items-center gap-x-2 w-full relative">
                             <Card loading={false} hiddenOnPhoneFormat>
                                 <div className=" w-full h-full flex flex-col gap-y-2">
                                     {currentUserTracks && currentUserTracks.length > 0 && (
@@ -496,6 +440,65 @@ export default function MeetUsers({token}: MeetUsersProps): JSX.Element {
                                             strokeWidth={2}/>
                                 </div>
                             </button>
+                        </div>
+                        <div className="md:hidden flex flex-grow flex-1 h-full"></div>
+                        <div
+                            className="md:hidden w-full bg-white border border-whitish_border rounded-[9px] m-auto">
+                            <div className="relative w-full flex flex-row justify-between overflow-hidden">
+                                <div className="px-2 absolute bottom-0 w-full">
+                                    <div className="h-[2px] bg-accent_blue/[.12]">
+                                        <div
+                                            className={`bg-accent_blue h-[2px] rounded-full absolute w-full bottom-0`}
+                                            style={{width: `${((currentTrackIndex + 1) / 3) * 100}%`}}></div>
+                                    </div>
+                                </div>
+                                <div className="w-[50%] flex items-center justify-start px-2 gap-x-2  py-[12px]">
+                                    <Image
+                                        src={currentUserTracks[currentTrackIndex].image}
+                                        alt="profile picture"
+                                        className="rounded-[6px]"
+                                        width={45}
+                                        height={45}
+                                        objectFit="cover"
+                                        priority
+                                    />
+                                    <div className="flex flex-col text-center items-start">
+                                        <h2 className="text-[13px] font-semibold">{currentUserTracks[currentTrackIndex].title}</h2>
+                                        <h3 className="text-[12px] font-regular text-gray_border"
+                                            style={{fontFamily: montserrat.style.fontFamily, fontWeight: 400}}>
+                                            {currentUserTracks[currentTrackIndex].artist}
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div className="w-[50%] flex items-center justify-end px-2 gap-x-2  py-[8px]">
+                                    <div className="flex flex-col text-center items-start">
+                                        <div
+                                            className="mt-2 w-full flex justify-center items-center py-2 pr-3 gap-x-6">
+                                            <button onClick={() => handleTrackStatusChange("back")}
+                                                    disabled={currentTrackIndex <= 0}>
+                                                <Back
+                                                    className={`${currentTrackIndex > 0 ? "fill-accent_blue" : "fill-accent_blue/[.2]"}`}/>
+                                            </button>
+                                            <button
+                                                onClick={() => handleTrackStatusChange(playing ? "pause" : "play")}>
+                                                {playing ? (
+                                                    <Pause className={"fill-accent_blue w-[18px] h-[18px]"}/>
+                                                ) : (
+                                                    <Player className={"fill-accent_blue w-[18px] h-[18px]"}/>
+                                                )}
+                                            </button>
+                                            <button onClick={() => handleTrackStatusChange("next")}
+                                                    disabled={currentTrackIndex >= currentUserTracks.length - 1}>
+                                                <Back
+                                                    className={`${
+                                                        currentTrackIndex >= currentUserTracks.length - 1 ? "fill-accent_blue/[.2]" : "fill-accent_blue"
+                                                    } rotate-[180deg]`}
+                                                />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </>

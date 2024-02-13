@@ -46,7 +46,7 @@ export default async function Layout({children}: { children: ReactNode }) {
     const {data: {is_admin}} = await whoiam.json();
 
     return (
-        <section className="flex flex-row w-full justify-between h-full">
+        <section className="flex flex-row w-full justify-between h-full max-sm:flex-col">
             <Sidebar is_admin={is_admin}/>
             {children}
             <Feed notifications={notifications} matches={array}/>

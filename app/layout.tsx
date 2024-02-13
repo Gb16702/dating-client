@@ -1,4 +1,4 @@
-import type {Metadata, Viewport} from "next";
+import type {Metadata} from "next";
 import {Inter} from "next/font/google";
 import {Toaster} from "react-hot-toast";
 import "./globals.css";
@@ -12,11 +12,6 @@ export const metadata: Metadata = {
     description: "Bienvenue sur Harmony, où faire des rencontres est simple et rapide",
 };
 
-export const viewport: Viewport = {
-    initialScale: 1,
-    width: "device-width",
-    userScalable: false,
-}
 
 export default function RootLayout({children}: { children: React.ReactNode }) {
 

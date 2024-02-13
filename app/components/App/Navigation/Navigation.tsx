@@ -1,11 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import {usePathname, useRouter} from "next/navigation";
 import * as Icons from "../../Icons/Sidebar/App/AppIcons";
 import {Disconnect} from "../../Icons/Sidebar/App/AppIcons";
 import {deleteCookie} from "cookies-next";
 import {useSessionStore} from "@/app/stores/sessionStore";
+import {useEffect} from "react";
+import Link from "next/link";
 
 type NavigationItems = {
     name: string;
@@ -18,11 +19,15 @@ type NavigationProps = {
     id: string | undefined;
 };
 
-export default function Navigation({isAdmin, id}: NavigationProps): JSX.Element {
+export default function Navigation({isAdmin, id,}: NavigationProps): JSX.Element {
     const pathname = usePathname();
     const router = useRouter();
 
     const {removeSession} = useSessionStore();
+
+    useEffect(() => {
+
+    }, []);
 
 
     async function handleLogout() {
@@ -61,6 +66,8 @@ export default function Navigation({isAdmin, id}: NavigationProps): JSX.Element 
         },
 
     ].filter(Boolean);
+
+    console.log(isAdmin)
 
     if (isAdmin) {
         navigationItems.push({

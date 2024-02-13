@@ -61,14 +61,15 @@ export default async function Page({params}: { params: { conversationId: string 
     const fullName = otherUser.first_name + " " + otherUser?.last_name;
     return (
         <>
-            <div className="flex items-center min-h-[calc(8%)] max-h-[8%] px-10 bg-white flex-grow">
+            <div
+                className="flex items-center min-h-[calc(8%)] max-h-[8%] px-10 bg-white flex-grow-1 max-sm:w-screen max-md:px-3 max-md:hidden">
                 <div className="font-semibold flex justify-between items-center w-full">
                     <div className="flex gap-x-2 items-center">
                         <Image src={otherUser.profile_picture} alt="profile picture" width={32} height={32}
                                className="rounded-full w-[32px] h-[32px]"/>
                         <span>
-              {otherUser.first_name} {otherUser.last_name}
-            </span>
+                          {otherUser.first_name} {otherUser.last_name}
+                        </span>
                     </div>
                     <div>
                         <TopBarChatActions fullName={fullName} uid={otherUser.user_id}
@@ -81,9 +82,38 @@ export default async function Page({params}: { params: { conversationId: string 
                 </div>
             </div>
             <div
-                className="flex items-center justify-between flex-col flex-grow border-t border-whitish_border bg-white">
+                className="flex items-center justify-between flex-col flex-grow border-t border-whitish_border bg-white max-md:hidden">
                 <Chat conversation_id={conversation_id} token={token} conversation={newConversationObject}
                       otherUser={otherUser}/>
+            </div>
+
+            <div
+                className="flex items-center min-h-[calc(8%)] max-h-[8%] px-10 bg-white flex-grow-1 max-sm:w-screen max-md:px-3 md:hidden max-md:h-screen max-md:flex-col max-md:max-h-screen">
+                <div className="font-semibold flex justify-between items-center w-full h-[90px]">
+                    <div className="flex gap-x-2 items-center">
+                        <Image src={otherUser.profile_picture} alt="profile picture" width={32} height={32}
+                               className="rounded-full w-[32px] h-[32px]"/>
+                        <span>
+                          {otherUser.first_name} {otherUser.last_name}
+                        </span>
+                    </div>
+                    <div>
+                        <TopBarChatActions fullName={fullName} uid={otherUser.user_id}
+                                           areUsersMatching={otherUser.areUsersMatching}
+                                           isFavorite={isFavorite}
+                                           conversationId={conversation_id}
+                                           isUserBlocked={otherUser.isUserBlocked}
+                        />
+                    </div>
+                </div>
+                <div
+                    className="flex items-center justify-between flex-col flex-grow border-t border-whitish_border bg-white w-screen h-screen md:hidden">
+                    <Chat conversation_id={conversation_id} token={token} conversation={newConversationObject}
+                          otherUser={otherUser}/>
+                </div>
+                <div>
+
+                </div>
             </div>
         </>
     );
