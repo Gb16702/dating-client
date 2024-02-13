@@ -11,7 +11,7 @@ export const useSocketStore = create<SocketState>((set) => ({
     socket: null,
 
     connect: (id) => {
-        const socketInstance = io(`${process.env.WEBSOCKET_SERVER}`, {
+        const socketInstance = io(`wss://api.no-idea.online/`, {
             auth: {id},
         });
         set({socket: socketInstance});

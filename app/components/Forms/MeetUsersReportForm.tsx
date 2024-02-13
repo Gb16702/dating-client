@@ -86,7 +86,7 @@ export default function MeetUsersReportForm({uid}: MeetUsersReportFormProps): JS
                     </div>
                     <div className="flex flex-row w-full max-sm:flex-col max-sm:gap-y-2">
                         <Button variant="custom"
-                                customClasses="rounded-[8px] font-semibold px-6 bg-accent_blue  text-white w-1/4 bg-accent_blue max-sm:w-full">
+                                customClasses="rounded-[8px] font-semibold px-6 bg-black  text-white w-1/4 bg-accent_blue max-sm:w-full">
                             Signaler
                         </Button>
                     </div>

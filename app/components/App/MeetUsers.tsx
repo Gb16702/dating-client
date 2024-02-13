@@ -174,7 +174,7 @@ export default function MeetUsers({token}: MeetUsersProps): JSX.Element {
             <Polygon additionalClasses={`w-[500px] max-md:w-[96%] max-md:rounded-[7px]`}
                      onClickEvent={() => setModalOpen(false)} closable>
                 <div className="flex items-center justify-between border-b p-4">
-                    <h3 className="font-bold text-accent_blue">Signaler {iterableUsers[index].first_name}</h3>
+                    <h3 className="font-bold text-black">Signaler {iterableUsers[index].first_name}</h3>
                 </div>
                 <MeetUsersReportForm uid={iterableUsers[index].id}/>
             </Polygon>,

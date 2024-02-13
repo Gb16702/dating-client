@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import {usePathname} from "next/navigation";
+import {getCookie} from "cookies-next";
 
 type arrayElems = {
     name: string;
@@ -10,15 +11,12 @@ type arrayElems = {
 
 export default function ProfileNavigation(): JSX.Element {
     const pathname: string = usePathname();
+    const token = getCookie("uid");
 
     const array: arrayElems[] = [
         {
             name: "Personnalisation",
             path: "personnalisation",
-        },
-        {
-            name: "Mes matchs",
-            path: "mes-matchs",
         },
         {
             name: "Paramètres",
@@ -39,7 +37,7 @@ export default function ProfileNavigation(): JSX.Element {
                         className="border-b border-whitish_border h-[73px] px-8 flex items-center"
                     >
                         <Link
-                            href={`profil/${item.path}`}
+                            href={`https://no-idea.online/${token}/profil/${item.path}`}
                             className={`text-[14px] ${
                                 isActive(item.path)
                                     ? "text-accent_blue"

@@ -12,8 +12,6 @@ import {transformDate} from "@/app/utils/transformDate";
 import {getCookie} from "cookies-next";
 import toast from "react-hot-toast";
 import Toast from "../UI/Toast";
-import Link from "next/link";
-import Chevron from "@/app/components/Icons/Chevron";
 
 export default function Feed({notifications, matches}: { notifications: any, matches: any[] }) {
     const [open, setOpen] = useState(false);
@@ -148,7 +146,7 @@ export default function Feed({notifications, matches}: { notifications: any, mat
                 </button>
                 <div
                     className="h-[84%] flex items-center justify-start flex-col w-full border-y border-whitish_border py-6 px-2 gap-y-6">
-                    {open && (
+                    {open && matches.length > 0 && (
                         <h2 className="font-semibold flex justify-start w-full px-2">Vos derniers matchs
                             ({matches.length})</h2>
                     )}
@@ -166,11 +164,6 @@ export default function Feed({notifications, matches}: { notifications: any, mat
                             {open && (
                                 <div className="flex flex-col justify-start">
                                     <h3 className="text-[14px] font-semibold">{match.first_name} {match.last_name}</h3>
-                                    <Link href={``}
-                                          className="text-accent_blue text-xs mt-1 font-medium flex gap-x-1.5 items-center">
-                                        Voir le profil de {match.first_name}
-                                        <Chevron classes={"w-[12px] h-[12px] rotate-[-90deg]"}/>
-                                    </Link>
                                 </div>)
                             }
                         </div>

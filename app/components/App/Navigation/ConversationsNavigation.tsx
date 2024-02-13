@@ -91,7 +91,7 @@ export default function ConversationsNavigation({conversations, uid}: Conversati
                 {conversations.length === 0 ? (
                     <div className="h-[calc(100%-73px)] flex items-center justify-center">
                         <h1 className="text-sm font-medium text-black text-center max-w-full break-words px-2">
-                            <Link className=" text-accent_blue" href={`${process.env.NEXT_PUBLIC_CLIENT}`}>
+                            <Link className=" text-accent_blue" href={`https://no-idea.online/`}>
                                 Rencontrez des gens pour commencer à discuter
                             </Link>
                         </h1>
@@ -108,7 +108,7 @@ export default function ConversationsNavigation({conversations, uid}: Conversati
                 <div className="w-full flex flex-col gap-y-3 px-3 mt-8">
                     {filteredConversations.map((c, i: number) => (
                         <Link
-                            href={`${process.env.NEXT_PUBLIC_CLIENT}/${uid}/conversations/${c.id}`}
+                            href={`https://no-idea.online/${uid}/conversations/${c.id}`}
                             key={i}
                             className="py-2 cursor-pointer hover:bg-whitish_background rounded-[9px] px-3">
                             <div className="flex gap-x-3">
