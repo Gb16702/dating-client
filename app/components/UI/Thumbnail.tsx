@@ -5,8 +5,6 @@ import {Montserrat} from "next/font/google";
 import {type RefObject, useEffect, useRef, useState} from "react";
 import {useRouter} from "next/navigation";
 import {type AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
-import {deleteCookie} from "cookies-next";
-import {useSessionStore} from "@/app/stores/sessionStore";
 import Image from "next/image";
 
 type ThumbnailProps = {
@@ -40,8 +38,6 @@ export default function Thumbnail({properties, loading}: ThumbnailProps) {
     const [open, setOpen] = useState<boolean>(false);
     const ref: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
 
-    const {removeSession} = useSessionStore();
-
     const router: AppRouterInstance = useRouter();
 
     useEffect(() => {
@@ -56,13 +52,6 @@ export default function Thumbnail({properties, loading}: ThumbnailProps) {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
-
-    async function handleLogout() {
-        deleteCookie("token");
-        deleteCookie("uid");
-        removeSession();
-        router.refresh();
-    }
 
     return (
         <>
@@ -93,23 +82,6 @@ export default function Thumbnail({properties, loading}: ThumbnailProps) {
                             </small>
                         </div>
                     </div>
-                    {open && (
-                        <div
-                            className="min-w-[220px] h-[90px] left-[90px] rounded-[10px] bg-white border border-whitish_border flex flex-col justify-start relative bottom-[40px] overflow-hidden"
-                            ref={ref}>
-                            <button
-                                className="h-1/2 w-full text-[14px] font-medium border-b border-whitish_background px-2 text-left text-subtitle_foreground">
-                                Thème sombre
-                            </button>
-                            <button className="h-1/2 text-[14px] font-medium text-red-400 px-2  w-full text-left"
-                                    onClick={handleLogout}>
-                                Déconnexion
-                            </button>
-                        </div>
-                    )}
-                    <button className={`text-[19px] font-bold ${open && "hidden"}`} onClick={() => setOpen(true)}>
-                        ...
-                    </button>
                 </div>
             )}
         </>

@@ -4,136 +4,149 @@
 
 button.default:hover,
 button.default:disabled {
-  @apply bg-zinc-700 !important;
+    @apply bg-zinc-700 !important;
+}
+
+body {
+    overflow: hidden;
 }
 
 .spinner {
-  -webkit-animation: rotation 1.35s linear infinite;
-  animation: rotation 1.35s linear infinite;
+    -webkit-animation: rotation 1.35s linear infinite;
+    animation: rotation 1.35s linear infinite;
 }
 
 @keyframes rotation {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
 
-  100% {
-    -webkit-transform: rotate(270deg);
-    transform: rotate(270deg);
-  }
+    100% {
+        -webkit-transform: rotate(270deg);
+        transform: rotate(270deg);
+    }
 }
 
 .circle {
-  stroke-dasharray: 180;
-  stroke-dashoffset: 0;
-  -webkit-transform-origin: center;
-  -ms-transform-origin: center;
-  transform-origin: center;
-  -webkit-animation: turn 1.35s ease-in-out infinite;
-  animation: turn 1.35s ease-in-out infinite;
+    stroke-dasharray: 180;
+    stroke-dashoffset: 0;
+    -webkit-transform-origin: center;
+    -ms-transform-origin: center;
+    transform-origin: center;
+    -webkit-animation: turn 1.35s ease-in-out infinite;
+    animation: turn 1.35s ease-in-out infinite;
 }
 
 @keyframes turn {
-  0% {
-    stroke-dashoffset: 180;
-  }
+    0% {
+        stroke-dashoffset: 180;
+    }
 
-  50% {
-    stroke-dashoffset: 45;
-    -webkit-transform: rotate(135deg);
-    transform: rotate(135deg);
-  }
+    50% {
+        stroke-dashoffset: 45;
+        -webkit-transform: rotate(135deg);
+        transform: rotate(135deg);
+    }
 
-  100% {
-    stroke-dashoffset: 180;
-    -webkit-transform: rotate(450deg);
-    transform: rotate(450deg);
-  }
+    100% {
+        stroke-dashoffset: 180;
+        -webkit-transform: rotate(450deg);
+        transform: rotate(450deg);
+    }
 }
 
 .spinner:nth-child(1) {
-  stroke: #fff;
+    stroke: #fff;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 /* Pour Firefox */
 input[type="number"] {
-  -moz-appearance: textfield;
+    -moz-appearance: textfield;
 }
 
 /* width */
 ::-webkit-scrollbar {
-  width: 5px;
+    width: 5px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: transparent;
-  border-radius: 1000px;
+    background: transparent;
+    border-radius: 1000px;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #dfdfdf;
-  border-radius: 1000px;
+    background: #dfdfdf;
+    border-radius: 1000px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #ddd;
+    background: #ddd;
 }
 
 .no-scrollbar::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 .icon_bars {
-  display: flex;
-  align-items: flex-end;
-  height: 20px;
-  position: absolute;
-  z-index: 10;
+    display: flex;
+    align-items: flex-end;
+    height: 20px;
+    position: absolute;
+    z-index: 10;
 }
 
 .icon_bar {
-  width: 4px;
-  margin: 0 2px;
-  background-color: white;
-  border-radius: 5px;
-  animation: bounce 0.8s infinite ease-in-out;
+    width: 4px;
+    margin: 0 2px;
+    background-color: white;
+    border-radius: 5px;
+    animation: bounce 0.8s infinite ease-in-out;
 }
 
 @keyframes bounce {
-  0%,
-  100% {
-    height: 3px;
-  }
-  25% {
-    height: 18px;
-  }
-  50% {
-    height: 16px;
-  }
-  75% {
-    height: 6px;
-  }
+    0%,
+    100% {
+        height: 3px;
+    }
+    25% {
+        height: 18px;
+    }
+    50% {
+        height: 16px;
+    }
+    75% {
+        height: 6px;
+    }
 }
 
 .icon_bar:nth-child(1) {
-  animation-delay: 0s;
+    animation-delay: 0s;
 }
+
 .icon_bar:nth-child(2) {
-  animation-delay: 0.2s;
+    animation-delay: 0.2s;
 }
+
 .icon_bar:nth-child(3) {
-  animation-delay: 0.4s;
+    animation-delay: 0.4s;
 }
+
 .icon_bar:nth-child(4) {
-  animation-delay: 0.6s;
+    animation-delay: 0.6s;
 }
+
+/*@media all and (max-width: 768px) {*/
+/*    body {*/
+/*        pointer-events: none;*/
+/*    }*/
+/*}*/

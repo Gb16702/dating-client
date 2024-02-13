@@ -30,10 +30,12 @@ async function getOtherUserInformations(conversationId: string): Promise<any> {
         cache: "no-store",
     });
 
-    const {profile, areUsersMatching} = await response.json();
+    const {profile, areUsersMatching, isUserBlocked} = await response.json();
+
     const obj = {
         ...profile,
         areUsersMatching,
+        isUserBlocked
     }
 
     return {obj};
@@ -59,7 +61,7 @@ export default async function Page({params}: { params: { conversationId: string 
     const fullName = otherUser.first_name + " " + otherUser?.last_name;
     return (
         <>
-            <div className="flex items-center min-h-[calc(8%)] px-10 bg-white flex-grow">
+            <div className="flex items-center min-h-[calc(8%)] max-h-[8%] px-10 bg-white flex-grow">
                 <div className="font-semibold flex justify-between items-center w-full">
                     <div className="flex gap-x-2 items-center">
                         <Image src={otherUser.profile_picture} alt="profile picture" width={32} height={32}
@@ -73,11 +75,13 @@ export default async function Page({params}: { params: { conversationId: string 
                                            areUsersMatching={otherUser.areUsersMatching}
                                            isFavorite={isFavorite}
                                            conversationId={conversation_id}
+                                           isUserBlocked={otherUser.isUserBlocked}
                         />
                     </div>
                 </div>
             </div>
-            <div className="flex items-center justify-between flex-col flex-grow border-t border-whitish_border">
+            <div
+                className="flex items-center justify-between flex-col flex-grow border-t border-whitish_border bg-white">
                 <Chat conversation_id={conversation_id} token={token} conversation={newConversationObject}
                       otherUser={otherUser}/>
             </div>

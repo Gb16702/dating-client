@@ -11,12 +11,20 @@ import Toast from "@/app/components/UI/Toast";
 import {useRouter} from "next/navigation";
 import MeetUsersReportForm from "@/app/components/Forms/MeetUsersReportForm";
 
-export default function TopBarChatActions({fullName, uid, areUsersMatching, conversationId, isFavorite}: {
+export default function TopBarChatActions({
+                                              fullName,
+                                              uid,
+                                              areUsersMatching,
+                                              conversationId,
+                                              isFavorite,
+                                              isUserBlocked
+                                          }: {
     fullName: string,
     uid: string,
     areUsersMatching: boolean,
     conversationId: string,
-    isFavorite: boolean
+    isFavorite: boolean,
+    isUserBlocked: boolean
 }) {
     const [open, setOpen] = useState<boolean>(false);
     const [matchModalOpen, setMatchModalOpen] = useState(false);
@@ -28,6 +36,9 @@ export default function TopBarChatActions({fullName, uid, areUsersMatching, conv
     const [loading, setLoading] = useState(false);
 
     const router = useRouter();
+
+    console.log(isUserBlocked, "UIUI");
+
 
     function handleChange(e: any) {
         console.log(value);
@@ -46,6 +57,10 @@ export default function TopBarChatActions({fullName, uid, areUsersMatching, conv
 
     async function breakMatch() {
         setLoading(true);
+        {
+            isUserBlocked
+        }
+
         const response = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_SERVER}api/users/matches/delete/${uid}`, {
             method: "DELETE",
             headers: {
@@ -85,10 +100,35 @@ export default function TopBarChatActions({fullName, uid, areUsersMatching, conv
     }
 
     async function blockUser() {
-        const response = await fetch(``, {})
+        let response: any;
+        console.log(isUserBlocked, "UIUI")
+        if (isUserBlocked) {
+            response = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_SERVER}api/users/blocked/delete/${uid}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${getCookie("token")}`,
+                    "Content-type": "Application/json"
+                }
+            })
+        } else {
+            response = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_SERVER}api/users/blocked/create`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${getCookie("token")}`,
+                    "Content-type": "Application/json"
+                },
+                body: JSON.stringify({blockedUserId: uid})
+            })
+        }
 
-        const data = await response.json();
-        console.log(data);
+        const {message} = await response.json();
+
+        setLoading(false);
+        toast.custom((t) => <Toast message={message} type={response.ok ? "Succès" : "Erreur"} t={t}/>);
+        if (response.ok) {
+            setBlockedModalOpen(false);
+            router.refresh();
+        }
     }
 
     const modal: ReactPortal | null = open
@@ -129,14 +169,26 @@ export default function TopBarChatActions({fullName, uid, areUsersMatching, conv
                         }}
                         className="h-[60px] w-full border-b ">Signaler
                     </button>
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setBlockedModalOpen(true);
-                            setOpen(false);
-                        }}
-                        className="h-[60px] w-full ">Bloquer
-                    </button>
+
+                    {
+                        isUserBlocked ? (
+                            <>
+                                <button
+                                    onClick={blockUser}
+                                    className="h-[60px] w-full ">Débloquer
+                                </button>
+                            </>
+                        ) : (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setBlockedModalOpen(true);
+                                    setOpen(false);
+                                }}
+                                className="h-[60px] w-full ">Bloquer
+                            </button>
+                        )
+                    }
                 </div>
             </Polygon>,
             document.body
@@ -163,7 +215,7 @@ export default function TopBarChatActions({fullName, uid, areUsersMatching, conv
 
     const blockedModal: ReactPortal | null = blockedModalOpen ? createPortal(
             <Polygon additionalClasses={`w-[500px] max-md:w-[96%] max-md:rounded-[7px]`}
-                     onClickEvent={() => setOpen(false)} closable>
+                     onClickEvent={() => setBlockedModalOpen(false)} closable>
                 <div className="flex items-center justify-between border-b p-4">
                     <h3 className="font-bold">Bloquer {fullName} </h3>
                     <button onClick={() => setBlockedModalOpen(false)} className="border p-1 rounded-[6px]">

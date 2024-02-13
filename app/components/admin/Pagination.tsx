@@ -1,8 +1,9 @@
 "use client";
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import {useRouter} from "next/navigation";
+import {useState} from "react";
+import {ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight} from "../Icons/Chevron";
 
-export function DataTablePagination({ totalPages, initialPage }: { totalPages: number, initialPage: number }) {
+export function DataTablePagination({totalPages, initialPage}: { totalPages: number, initialPage: number }) {
     const router = useRouter()
     const [currentPage, setCurrentPage] = useState(initialPage);
 
@@ -25,33 +26,36 @@ export function DataTablePagination({ totalPages, initialPage }: { totalPages: n
                 </div>
                 <div className="flex items-center space-x-2">
                     <button
-                        className="hidden h-8 w-8 p-0 lg:flex"
+                        className={`h-8 w-8 p-0 border border-input bg-white rounded flex items-center justify-center ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
                         onClick={() => onPageChange(1)}
                         disabled={currentPage === 1}
                     >
                         <span className="sr-only">Go to first page</span>
-
+                        <ChevronsLeft classes="h-4 w-4"/>
                     </button>
                     <button
-                        className="h-8 w-8 p-0"
+                        className={`h-8 w-8 p-0 border border-input bg-white rounded flex items-center justify-center ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
                         onClick={() => onPageChange(currentPage - 1)}
                         disabled={currentPage === 1}
                     >
+                        <ChevronLeft classes="h-4 w-4"/>
                         <span className="sr-only">Go to previous page</span>
                     </button>
                     <button
-                        className="h-8 w-8 p-0"
+                        className={`h-8 w-8 p-0 border border-input bg-white rounded flex items-center justify-center ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`}
                         onClick={() => onPageChange(currentPage + 1)}
                         disabled={currentPage === totalPages}
                     >
+                        <ChevronRight classes="h-4 w-4"/>
                         <span className="sr-only">Go to next page</span>
                     </button>
                     <button
-                        className="hidden h-8 w-8 p-0 lg:flex"
+                        className={`h-8 w-8 p-0 border border-input bg-white rounded flex items-center justify-center ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`}
                         onClick={() => onPageChange(totalPages)}
                         disabled={currentPage === totalPages}
                     >
                         <span className="sr-only">Go to last page</span>
+                        <ChevronsRight classes="h-4 w-4"/>
                     </button>
                 </div>
             </div>
