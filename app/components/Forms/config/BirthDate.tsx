@@ -77,15 +77,13 @@ export default function BirthDate({onNextStep, onBirthDateChange, initialBirthDa
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="flex flex-row w-[400px] ma  x-sm:w-full flex-1 pt-[20px] gap-x-3">
+                <div className="flex flex-row w-[400px] max-sm:w-full flex-1 pt-[20px] max-sm:pt-[30px] gap-x-3">
                     <div>
                         <Label name="Jour" id="day"/>
-                        <div className="rounded-md outline outline-1 outline-gray_border h-[35px]">
+                        <div className="rounded-md outline outline-1 outline-gray_border h-[35px] max-sm:h-[40px]">
                             <input
                                 type="number"
                                 aria-label="Jour"
-                                maxLength={2}
-                                minLength={0}
                                 placeholder="JJ"
                                 onKeyDown={handleKeyPress}
                                 className="outline-none text-center text-base text-black placeholder-gray_border w-[60px] max-sm:w-[100%] h-full"
@@ -95,7 +93,7 @@ export default function BirthDate({onNextStep, onBirthDateChange, initialBirthDa
                     </div>
                     <div>
                         <Label name="Mois" id="month"/>
-                        <div className="rounded-md outline outline-1 outline-gray_border h-[35px]">
+                        <div className="rounded-md outline outline-1 outline-gray_border h-[35px] max-sm:h-[40px]">
                             <input
                                 type="number"
                                 aria-label="Mois"
@@ -108,7 +106,7 @@ export default function BirthDate({onNextStep, onBirthDateChange, initialBirthDa
                     </div>
                     <div>
                         <Label name="Année" id="year"/>
-                        <div className="rounded-md outline outline-1 outline-gray_border h-[35px]">
+                        <div className="rounded-md outline outline-1 outline-gray_border h-[35px] max-sm:h-[40px]">
                             <input
                                 type="number"
                                 aria-label="Année"
