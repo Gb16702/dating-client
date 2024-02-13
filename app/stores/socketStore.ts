@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { io } from 'socket.io-client';
+import {create} from "zustand";
+import {io} from 'socket.io-client';
 
 type SocketState = {
     socket: any;
@@ -11,10 +11,10 @@ export const useSocketStore = create<SocketState>((set) => ({
     socket: null,
 
     connect: (id) => {
-        const socketInstance = io("ws://localhost:20000", {
-            auth: { id },
+        const socketInstance = io(`${process.env.WEBSOCKET_SERVER}`, {
+            auth: {id},
         });
-        set({ socket: socketInstance });
+        set({socket: socketInstance});
     },
 
     disconnect: () => {
@@ -22,7 +22,7 @@ export const useSocketStore = create<SocketState>((set) => ({
             if (state.socket) {
                 state.socket.disconnect();
             }
-            return { socket: null };
+            return {socket: null};
         });
     },
 }));
